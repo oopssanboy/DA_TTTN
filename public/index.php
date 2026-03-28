@@ -7,7 +7,7 @@ require_once dirname(__DIR__) . '/app/core/autoload.php';
 $router = new \Bramus\Router\Router();
 $router->setBasePath('/');
 // ==========================================
-// 1. GIAO DIỆN KHÁCH HÀNG (CLIENT)
+// 1. GIAO DIỆN KHÁCH HÀNG (CLIENT)-----------------------------------------------------
 // ==========================================
 $router->get('/', function() {
     $controller = new HomeController();
