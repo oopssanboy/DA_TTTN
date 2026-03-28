@@ -14,10 +14,7 @@ $router->get('/', function() {
     $controller->index();
 });
 
-$router->get('/san-pham', function() {
-    $controller = new ShopController();
-    $controller->index();
-});
+$router->get('/danh-muc', function() { (new ShopController())->index(); });
 
 // Bắt ID sản phẩm và truyền vào hàm detail() của ProductController
 $router->get('/san-pham/chi-tiet/(\d+)', function($id) {

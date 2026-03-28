@@ -22,7 +22,7 @@
                 </div>
                 
                 <div class="top-item top-search">
-                    <form action="/san-pham" method="GET" class="search-form">
+                    <form action="/danh-muc" method="GET" class="search-form">
                         <input type="text" name="keyword" placeholder="Tìm kiếm sách, tác giả..." value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
                         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
@@ -99,7 +99,7 @@
                                 if(count($list_ct) > 0):
                                     foreach($list_ct as $cat){
                         ?>
-                                <li><a href="/san-pham?ma_danhmuc=<?php echo $cat['ma_danhmuc']?>"><?php echo htmlspecialchars($cat['ten_danhmuc'])?></a></li> 
+                                <li><a href="/danh-muc?ma_danhmuc=<?php echo $cat['ma_danhmuc']?>"><?php echo htmlspecialchars($cat['ten_danhmuc'])?></a></li> 
                         <?php 
                                     } 
                                 else: 
