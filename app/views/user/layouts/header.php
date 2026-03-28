@@ -89,7 +89,7 @@
             <ul class="main-menu">
                 <li><a href="/">Trang chủ</a></li>
                 <li class="has-dropdown">
-                    <a href="/san-pham">Danh mục <i class="fa-solid fa-chevron-down" style="font-size: 11px; margin-left: 3px;"></i></a>
+                    <a>Danh mục <i class="fa-solid fa-chevron-down" style="font-size: 11px; margin-left: 3px;"></i></a>
                     <ul class="sub_menu">
                         <?php
                             

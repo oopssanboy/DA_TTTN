@@ -2,6 +2,7 @@
     "require": {
         "google/apiclient": "2.18.4",
         "facebook/graph-sdk": "^5.1",
-        "bramus/router": "^1.6"
+        "bramus/router": "^1.6",
+        "phpmailer/phpmailer": "^7.0"
     }
 }

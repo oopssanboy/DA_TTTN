@@ -386,5 +386,16 @@
     max-height: 50px; /* Độ to của Logo shop */
     filter: brightness(0) invert(1); 
     transition: transform 0.3s;
-}
+    }
+    .header-bottom {
+        position: relative;
+    }
+    .main-menu > li {
+        position: static;
+        flex-shrink: 0; 
+    }
+    .sub_menu{
+        margin-left: 20%;
+    }
+    
 }
