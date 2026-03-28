@@ -1,0 +1,5 @@
+# Bỏ qua file cấu hình để bảo mật Database
+app/core/DB.class.php
+vendor/bramus/
+# Bỏ qua luôn thư mục ảnh người dùng tải lên (để không đè mất ảnh trên host)
+public/uploads/
