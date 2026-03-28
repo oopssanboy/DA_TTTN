@@ -1,0 +1,191 @@
+/* Khung ngoài Footer */
+.site-footer {
+    background-color: #151515; /* Nền xám đen nhám */
+    color: #aaaaaa;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    border-top: 1px solid #333;
+    margin-top: 60px;
+}
+
+/* Phần nội dung chính 3 cột */
+.footer-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 15px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr; /* Tỉ lệ chia 3 cột (Cột 1 to nhất) */
+    gap: 40px;
+}
+
+.footer-col h3 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* Vạch màu cam dưới tiêu đề mỗi cột */
+.footer-col h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #d97706; 
+}
+
+/* Cột 1: Brand */
+.brand-info p {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.contact-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.contact-list li {
+    margin-bottom: 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.contact-list li img {
+    width: 20px;       /* Cố định chiều rộng */
+    height: 20px;      /* Cố định chiều cao */
+    object-fit: contain;
+    
+    /* Dòng bùa chú này giúp biến ảnh icon màu đen nguyên bản thành MÀU CAM ĐẤT */
+    filter: invert(56%) sepia(85%) saturate(1636%) hue-rotate(1deg) brightness(98%) contrast(92%);
+}
+
+.bct-logo {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 10px; /* Khoảng cách giữa logo và chữ */
+    margin-top: 15px;
+}
+
+.bct-logo img {
+    height: 40px;
+}
+.bct-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #aaaaaa;
+    text-transform: uppercase; /* Viết hoa chữ */
+}
+
+/* Cột 2: Quick Links */
+.quick-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.quick-links ul li {
+    margin-bottom: 15px;
+}
+
+.quick-links ul li a {
+    color: #aaaaaa;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.quick-links ul li a:hover {
+    color: #d97706;
+    transform: translateX(8px); /* Trượt mũi tên nhẹ khi hover */
+}
+
+/* Cột 3: Map */
+.map-container iframe {
+   
+    transition: filter 0.3s;
+}
+
+.map-container iframe:hover {
+    filter: none; /* Hiển thị màu thực khi người dùng di chuột vào bản đồ */
+}
+
+/* DẢI BẢN QUYỀN DƯỚI CÙNG */
+.footer-bottom {
+    background-color: #0a0a0a; /* Đen đậm hơn phần trên */
+    padding: 15px 0;
+    border-top: 1px solid #222;
+}
+
+.footer-bottom-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.copyright {
+    font-size: 13px;
+    color: #777;
+}
+
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-links a img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #2a2a2a;
+    padding: 6px;
+    transition: all 0.3s ease;
+    /* Làm xám trắng logo mạng xã hội ban đầu */
+    /* filter: brightness(0) invert(0.6);  */
+}
+
+.social-links a:hover img {
+    background-color: #d97706; /* Đổi nền cam khi hover */
+    width: 42px;
+    height: 42px;
+    /* filter: brightness(0) invert(1); Sáng hẳn logo lên */
+    transform: translateY(-3px);
+}
+
+/* RESPONSIVE CHO ĐIỆN THOẠI & TABLET */
+@media (max-width: 992px) {
+    .footer-main {
+        grid-template-columns: 1fr 1fr;
+    }
+    .footer-col.brand-info {
+        grid-column: 1 / -1; /* Cho cột 1 nằm trọn 1 dòng ngang trên tablet */
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-main {
+        grid-template-columns: 1fr;
+        padding: 40px 15px;
+    }
+    .footer-bottom-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+    .social-links {
+        justify-content: center;
+    }
+}

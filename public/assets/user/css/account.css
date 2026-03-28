@@ -1,0 +1,292 @@
+/* ==============================================
+   PERSONAL ACCOUNT MANAGEMENT PAGE (account.css)
+============================================== */
+.account-page {
+    margin-top: 50px;
+    margin-bottom: 70px;
+}
+
+.account-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.account-sidebar {
+    width: 25%; 
+    padding-right: 25px;
+}
+.account-content {
+    width: 75%; 
+}
+
+/* Sidebar Box */
+.account-info-box {
+    padding: 30px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+/* AVATAR STYLE */
+.user-avatar-wrapper.account-page-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.account-page-avatar .user-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color); 
+    padding: 3px;
+    
+    transition: all 0.3s ease;
+}
+
+.user-name-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+
+.user-role-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* MENU TASKBAR */
+.account-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.account-menu-list li {
+    border-bottom: 1px solid var(--border-color);
+}
+.account-menu-list li:last-child {
+    border-bottom: none;
+}
+
+.account-menu-list li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.account-menu-list li a:hover {
+    background-color: #fafafa; 
+    color: var(--primary-color);
+    padding-left: 25px; /* Hiệu ứng trượt nhẹ */
+}
+
+.account-menu-list li a.active {
+    background-color: rgba(217, 119, 6, 0.1); /* Màu cam nhạt */
+    color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+    font-weight: bold;
+}
+
+/* CONTENT BOX */
+.account-details-box {
+    padding: 35px 40px;
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    min-height: 500px;
+}
+
+.account-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.account-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* FORMS */
+.account-form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    max-width: 600px;
+}
+
+.account-form label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.account-form input, .account-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.account-form input:focus, .account-form textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(217,119,6,0.1);
+}
+
+.account-form textarea {
+    height: 100px;
+    resize: none;
+}
+
+/* BẢNG ĐƠN HÀNG (TABLES) */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.account-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.account-table th {
+    background-color: #f5f5f5;
+    padding: 12px;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.account-table td {
+    padding: 15px 12px;
+    font-size: 14px;
+    border: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* BADGES TRẠNG THÁI */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #e0e0e0;
+    color: #555;
+    text-transform: capitalize;
+}
+
+.status-success {
+    background-color: #e6f4ea;
+    color: #1e8e3e;
+}
+
+.status-cancel {
+    background-color: #fce8e6;
+    color: #d93025;
+}
+
+/* NÚT THAO TÁC (Action Buttons) */
+.action-btns {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-view, .btn-cancel {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-view {
+    background-color: #f0f8ff;
+    color: #0066cc;
+    border: 1px solid #cce0ff;
+}
+.btn-view:hover { 
+    background-color: #0066cc; color: white; 
+}
+
+.btn-cancel {
+    background-color: #fff0f0;
+    color: #cc0000;
+    border: 1px solid #ffcccc;
+}
+.btn-cancel:hover { 
+    background-color: #cc0000; color: white; 
+}
+
+/* Thông tin Text Display */
+.profile-info-display p {
+    font-size: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+}
+.profile-info-display p strong {
+    display: inline-block;
+    width: 150px;
+    color: #555;
+}
+
+/* Box chi tiết đơn hàng */
+.order-info-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+.order-info-card h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: var(--primary-color);
+}
+.order-info-card p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+    .account-layout {
+        flex-direction: column; 
+    }
+    .account-sidebar, .account-content {
+        width: 100%;
+        padding-right: 0;
+    }
+    .account-sidebar {
+        margin-bottom: 30px;
+    }
+    .account-details-box {
+        padding: 20px;
+    }
+}
