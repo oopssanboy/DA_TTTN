@@ -197,6 +197,138 @@ class AuthController extends Controller
             exit;
         }
     }
+    // =================================================================
+    // LUỒNG QUÊN MẬT KHẨU
+    // =================================================================
+
+    // 1. Hiển thị form nhập Email
+    public function forgotPassword() {
+        $this->view('user/auth/forgot_password', ['title' => 'Quên mật khẩu - Chapter One']);
+    }
+
+    // 1.1 Xử lý gửi OTP về Email
+    public function processForgotPassword() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $email = trim($_POST['email']);
+            $userModel = $this->model('User');
+
+            // Kiểm tra email có tồn tại trong hệ thống không
+            if (!$userModel->checkEmailExist($email)) {
+                $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Lỗi', 'text' => 'Email này chưa được đăng ký trong hệ thống!'];
+                header('Location: /quen-mat-khau');
+                exit;
+            }
+
+            // Tạo mã OTP 6 số
+            $otp = rand(100000, 999999);
+
+            // Lưu tạm vào Session (Hết hạn sau 5 phút)
+            $_SESSION['reset_temp'] = [
+                'email' => $email,
+                'otp' => $otp,
+                'expires' => time() + 300 
+            ];
+
+            // Gửi mail
+            require_once ROOT_DIR . '/app/helpers/Mailer.php';
+            $subject = "Mã xác thực Đặt lại mật khẩu - Chapter One";
+            $content = "<div style='font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;'>
+                            <h2 style='color: #333;'>Yêu cầu đặt lại mật khẩu</h2>
+                            <p>Bạn vừa yêu cầu đặt lại mật khẩu cho tài khoản <strong>{$email}</strong>.</p>
+                            <p>Mã xác thực OTP của bạn là: <strong style='font-size: 24px; color: #d97706; letter-spacing: 2px;'>{$otp}</strong></p>
+                            <p style='color: #888;'>Mã này sẽ hết hạn trong vòng 5 phút. Vui lòng không chia sẻ mã này cho bất kỳ ai.</p>
+                        </div>";
+                        
+            Mailer::sendMail($email, $subject, $content);
+
+            header('Location: /xac-thuc-otp-pass');
+            exit;
+        }
+    }
+
+    // 2. Hiển thị form nhập mã OTP
+    public function verifyResetOTP() {
+        if (!isset($_SESSION['reset_temp'])) {
+            header('Location: /quen-mat-khau');
+            exit;
+        }
+        $this->view('user/auth/verify_reset_otp', ['title' => 'Xác thực OTP - Chapter One']);
+    }
+
+    // 2.1 Xử lý kiểm tra mã OTP
+    public function processVerifyResetOTP() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $otp_input = trim($_POST['otp']);
+            
+            if (!isset($_SESSION['reset_temp'])) {
+                header('Location: /quen-mat-khau');
+                exit;
+            }
+
+            $temp_data = $_SESSION['reset_temp'];
+
+            if (time() > $temp_data['expires']) {
+                unset($_SESSION['reset_temp']);
+                $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Hết hạn', 'text' => 'Mã OTP đã hết hạn. Vui lòng yêu cầu lại!'];
+                header('Location: /quen-mat-khau');
+                exit;
+            }
+
+            if ($otp_input == $temp_data['otp']) {
+                // Đánh dấu là OTP đã xác thực thành công
+                $_SESSION['reset_temp']['verified'] = true;
+                header('Location: /dat-lai-mat-khau');
+            } else {
+                $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Sai mã', 'text' => 'Mã OTP không chính xác!'];
+                header('Location: /xac-thuc-otp-pass');
+            }
+            exit;
+        }
+    }
+
+    // 3. Hiển thị form đổi mật khẩu mới
+    public function resetPassword() {
+        // Phải qua bước OTP mới được vào trang này
+        if (!isset($_SESSION['reset_temp']) || !isset($_SESSION['reset_temp']['verified'])) {
+            header('Location: /quen-mat-khau');
+            exit;
+        }
+        $this->view('user/auth/reset_password', ['title' => 'Đặt lại mật khẩu - Chapter One']);
+    }
+
+    // 3.1 Xử lý đổi mật khẩu
+    public function processResetPassword() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (!isset($_SESSION['reset_temp']) || !isset($_SESSION['reset_temp']['verified'])) {
+                header('Location: /quen-mat-khau');
+                exit;
+            }
+
+            $matkhau_moi = $_POST['matkhau_moi'];
+            $xacnhan_matkhau = $_POST['xacnhan_matkhau'];
+            $email = $_SESSION['reset_temp']['email'];
+
+            if ($matkhau_moi !== $xacnhan_matkhau) {
+                $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Lỗi', 'text' => 'Mật khẩu xác nhận không khớp!'];
+                header('Location: /dat-lai-mat-khau');
+                exit;
+            }
+
+            $userModel = $this->model('User');
+            // Cập nhật mật khẩu
+            $result = $userModel->updatePasswordByEmail($email, $matkhau_moi);
+
+            if ($result) {
+                unset($_SESSION['reset_temp']); // Xóa session tạm
+                $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Thành công', 'text' => 'Mật khẩu đã được đổi thành công!'];
+                header('Location: /dang-nhap');
+            } else {
+                $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Lỗi', 'text' => 'Đã có lỗi xảy ra, vui lòng thử lại sau.'];
+                header('Location: /dat-lai-mat-khau');
+            }
+            exit;
+        }
+    }
 
     // 5. Đăng xuất
     public function logout()

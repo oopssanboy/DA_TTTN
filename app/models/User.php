@@ -62,6 +62,11 @@ class User extends DB {
         $sql = "UPDATE users SET matkhau = ? WHERE ma_kh = ?";
         return $this->update($sql, [$matkhau, $ma_kh]);
     }
+    public function updatePasswordByEmail($email, $new_password) {
+        // Lưu ý: Đảm bảo tên trường 'matkhau' và 'email' khớp với bảng trong DB của bạn
+        $sql = "UPDATE users SET matkhau = ? WHERE email = ?";
+        return $this->update($sql, [$new_password, $email]);
+    }
 
     // Cập nhật Thông tin cá nhân
     public function update_info($ten_kh, $email, $sdt, $dia_chi, $ma_kh) {

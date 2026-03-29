@@ -124,6 +124,18 @@ $router->post('/tai-khoan/doi-mat-khau', function () {
     $controller = new AccountController();
     $controller->updatePassword();
 });
+// --- LUỒNG QUÊN MẬT KHẨU ---
+    // 1. Trang nhập Email
+    $router->get('/quen-mat-khau', function() { (new AuthController())->forgotPassword(); });
+    $router->post('/quen-mat-khau', function() { (new AuthController())->processForgotPassword(); });
+    
+    // 2. Trang nhập OTP xác thực
+    $router->get('/xac-thuc-otp-pass', function() { (new AuthController())->verifyResetOTP(); });
+    $router->post('/xac-thuc-otp-pass', function() { (new AuthController())->processVerifyResetOTP(); });
+    
+    // 3. Trang đặt lại mật khẩu mới
+    $router->get('/dat-lai-mat-khau', function() { (new AuthController())->resetPassword(); });
+    $router->post('/dat-lai-mat-khau', function() { (new AuthController())->processResetPassword(); });
 
 // Route Hủy đơn hàng
 $router->get('/tai-khoan/huy-don/(\d+)', function ($ma_dh) {
@@ -135,6 +147,7 @@ $router->get('/xac-thuc-otp', function () {
     (new AuthController())->verifyOTP(); });
 $router->post('/xac-thuc-otp', function () {
     (new AuthController())->processVerifyOTP(); });
+
 
 
 

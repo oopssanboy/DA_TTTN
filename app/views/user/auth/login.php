@@ -50,7 +50,7 @@
                 <label class="remember-me">
                     <input type="checkbox" name="remember"> <span>Ghi nhớ tôi</span>
                 </label>
-                <a href="#" class="forget-password">Quên mật khẩu?</a>
+                <a href="/quen-mat-khau" class="forget-password">Quên mật khẩu?</a>
             </div>
             
             <button type="submit" class="btn-auth-submit">Đăng Nhập</button>
