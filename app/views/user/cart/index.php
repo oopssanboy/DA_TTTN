@@ -121,6 +121,11 @@
                                     <img src="<?= URLROOT ?>/assets/user/img/thanhtoan_bank.png" alt="Bank">
                                     <span>Chuyển khoản ngân hàng</span>
                                 </label>
+                                <label class="payment-item">
+                                    <input type="radio" name="pttt" value="momo">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/MoMo_Logo_App.svg" alt="MoMo" style="width: 25px; border-radius: 5px;">
+                                    <span>Thanh toán qua Ví MoMo</span>
+                                </label>
                             </div>
 
                             <input type="hidden" name="tongtien" value="<?php echo $sum_money; ?>">

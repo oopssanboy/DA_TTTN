@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="/assets/user/css/auth.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<head>
+    <title>Verify OTP - Chapter One</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
 <style>
     .otp-input-box { text-align: center; font-size: 28px; letter-spacing: 15px; font-weight: bold; padding: 15px; width: 100%; border: 1px solid #e8e8e8; border-radius: 6px; outline: none; }
     .otp-input-box:focus { border-color: #d97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15); }

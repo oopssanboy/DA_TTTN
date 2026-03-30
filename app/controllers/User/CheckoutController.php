@@ -70,5 +70,126 @@ class CheckoutController extends Controller {
              exit;
         }
     }
+    // Hàm tạo link thanh toán MoMo
+    public function momoPayment() {
+        if (!isset($_SESSION['user_order']) || $_SESSION['user_order'][5] != 'momo') {
+            header('Location: /gio-hang');
+            exit;
+        }
+
+        $tongtien = $_SESSION['user_order'][1];
+        $ma_kh = $_SESSION['user_order'][0];
+
+        // 1. THÔNG SỐ KẾT NỐI MÔI TRƯỜNG TEST CỦA MOMO (Dành cho đồ án)
+        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+        $partnerCode = "MOMOBKUN20180529";
+        $accessKey = "klm05TvNCzjOaHX1";
+        $secretKey = "at67qH6mk8w5Y1nAmLSqDGS7GLr2SpVQ";
+
+        // 2. THÔNG TIN ĐƠN HÀNG
+        $orderInfo = "Thanh toan don hang sach Chapter One";
+        $amount = (string)$tongtien;
+        $orderId = time() . "_KH" . $ma_kh; // Tạo mã đơn hàng ngẫu nhiên không trùng lặp
+        $redirectUrl = "https://jenna-nonportrayable-inexperiencedly.ngrok-free.dev/xac-nhan-momo"; // Domain thật của bạn
+        $ipnUrl = "https://jenna-nonportrayable-inexperiencedly.ngrok-free.dev/xac-nhan-momo"; 
+        
+        $requestId = time() . "";
+        $requestType = "captureWallet";
+        $extraData = "";
+
+        // 3. TẠO CHỮ KÝ BẢO MẬT (SIGNATURE) THEO CHUẨN MOMO
+        $rawHash = "accessKey=".$accessKey."&amount=".$amount."&extraData=".$extraData."&ipnUrl=".$ipnUrl."&orderId=".$orderId."&orderInfo=".$orderInfo."&partnerCode=".$partnerCode."&redirectUrl=".$redirectUrl."&requestId=".$requestId."&requestType=".$requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+
+        // 4. ĐÓNG GÓI DỮ LIỆU
+        $data = array(
+            'partnerCode' => $partnerCode,
+            'partnerName' => "Test Momo",
+            "storeId" => "MomoTestStore",
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'redirectUrl' => $redirectUrl,
+            'ipnUrl' => $ipnUrl,
+            'lang' => 'vi',
+            'extraData' => $extraData,
+            'requestType' => $requestType,
+            'signature' => $signature
+        );
+
+        // 5. GỬI SANG MOMO THÔNG QUA CURL
+        $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        $result = curl_exec($ch);
+        echo $result; exit;
+        curl_close($ch);
+
+        $jsonResult = json_decode($result, true);
+
+        // 6. KIỂM TRA PHẢN HỒI, NẾU ĐÚNG THÌ CHUYỂN TRANG
+        if (isset($jsonResult['payUrl'])) {
+            header('Location: ' . $jsonResult['payUrl']);
+            exit;
+        } else {
+            $_SESSION['flash_alert'] = ['title' => 'Lỗi kết nối', 'text' => 'Không thể tải cổng thanh toán MoMo lúc này.', 'icon' => 'error'];
+            header('Location: /gio-hang');
+            exit;
+        }
+    }
+    // Hàm xử lý kết quả MoMo trả về
+    public function momoReturn() {
+        // Lấy mã kết quả từ URL do MoMo ném về
+        $resultCode = isset($_GET['resultCode']) ? $_GET['resultCode'] : null;
+
+        if ($resultCode === '0' && isset($_SESSION['user_order'])) {
+            // ==========================================
+            // GIAO DỊCH THÀNH CÔNG -> LƯU VÀO DATABASE
+            // ==========================================
+            $ma_kh = $_SESSION['user_order'][0];
+            
+            $order = $this->model('Order');
+            $order_item = $this->model('Order_item');
+            $cart = $this->model('Cart');
+            $dacdiem_sp = $this->model('Dacdiem_sp');
+
+            // 1. Lấy giỏ hàng
+            $list_cart = $cart->getAllcart_info_byid($ma_kh);
+
+            // 2. Thêm đơn hàng (trạng thái: choxuly, pttt: momo)
+            $trangthai = 'choxuly'; 
+            $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $trangthai, 'momo', $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
+
+            // 3. Thêm chi tiết và trừ tồn kho
+            foreach ($list_cart as $item) {
+                // Chú ý: Hãy chắc chắn tên các cột này giống với DB của bạn
+                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['size'], $item['soluong'], $item['giasp'], $item['loai_mau']);
+                $dacdiem_sp->update_tonkho($item['ma_sp'], $item['size'], $item['loai_mau'], $item['soluong'], 'giam');
+            }
+
+            // 4. Dọn dẹp giỏ hàng
+            $cart->del_byid_kh($ma_kh);
+            $_SESSION['user_cart']['count'] = 0;
+            unset($_SESSION['user_order']); // Xóa session tạm
+
+            $_SESSION['flash_alert'] = ['title' => 'Thành công!', 'text' => 'Thanh toán MoMo thành công.', 'icon' => 'success'];
+            header("Location: /tai-khoan"); 
+            exit;
+
+        } else {
+            // ==========================================
+            // GIAO DỊCH THẤT BẠI HOẶC BỊ HỦY
+            // ==========================================
+            $_SESSION['flash_alert'] = ['title' => 'Thất bại', 'text' => 'Giao dịch MoMo bị hủy hoặc không thành công.', 'icon' => 'error'];
+            header("Location: /gio-hang");
+            exit;
+        }
+    }
 }
 ?>

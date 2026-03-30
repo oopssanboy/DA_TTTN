@@ -95,7 +95,7 @@
 
             <img src="/assets/user//img/qr.jpg" alt="Mã QR Chuyển Khoản">
             
-            <form method="POST" action="/xac-nhan-thanh-toan">
+            <form method="POST" action="/xac-nhan-thanh-toan-qr">
                 <button type="submit">Xác nhận đã thanh toán</button>
             </form>
         </div>

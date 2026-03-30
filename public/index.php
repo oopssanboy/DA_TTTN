@@ -23,7 +23,9 @@ $router->get('/san-pham/chi-tiet/(\d+)', function ($id) {
     $controller = new ProductController();
     $controller->detail($id);
 });
-
+// Gửi bình luận đánh giá sản phẩm
+    $router->post('/them-binh-luan', function() { (new ProductController())->addComment(); });
+    
 $router->get('/gio-hang', function () {
     $controller = new CartController();
     $controller->index();
@@ -49,14 +51,19 @@ $router->post('/gio-hang/thanh-toan', function () {
     $controller->checkout();
 });
 
-$router->get('/thanh-toan', function () {
+$router->get('/thanh-toan-qr', function () {
     $controller = new CheckoutController();
     $controller->index();
 });
-$router->post('/xac-nhan-thanh-toan', function () {
+$router->post('/xac-nhan-thanh-toan-qr', function () {
     $controller = new CheckoutController();
     $controller->confirmPayment();
 });
+// --- THANH TOÁN MOMO ---
+    // 1. Route đẩy dữ liệu sang MoMo để tạo mã QR
+    $router->get('/thanh-toan-momo', function() { (new CheckoutController())->momoPayment(); });
+    // 2. Route để MoMo trả kết quả về sau khi khách quét mã xong
+    $router->get('/xac-nhan-momo', function() { (new CheckoutController())->momoReturn(); });
 $router->get('/gioi-thieu', function () {
     $controller = new HomeController();
     $controller->gioithieu();

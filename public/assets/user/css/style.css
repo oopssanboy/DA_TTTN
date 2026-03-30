@@ -418,6 +418,14 @@ img {
     .intro-section { 
         padding: 40px 20px; 
     }
+    .intro-content h2 {
+        font-size: 28px;
+    }
+    .intro-content p {
+        
+        font-size: 16px;
+        
+    }
     .life-books-banner {
         min-height: 280px;
     }

@@ -125,32 +125,74 @@
     </div>
 
     <div class="product-reviews-section card-box">
-            <h2 class="section-title-sm">Đánh giá & Bình luận khách hàng</h2>
-            <div class="reviews-container">
-                <div class="review-item">
-                    <div class="reviewer-avatar"><img src="/assets/user/img/logo_user.png" alt="User"></div>
-                    <div class="reviewer-info">
-                        <h4>Nguyễn Văn A</h4>
-                        <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                        <span class="review-date">12/03/2025</span>
-                        <p class="review-text">Sách bọc cẩn thận, giao hàng rất nhanh. Nội dung sách cực kỳ lôi cuốn và ý nghĩa. Rất đáng tiền!</p>
+        <h2 class="section-title-sm">Đánh giá & Bình luận khách hàng</h2>
+        
+        <div class="reviews-container">
+            <?php if(isset($reviews) && !empty($reviews)): ?>
+                <?php 
+                    $total_reviews = count($reviews);
+                    foreach($reviews as $index => $rev): 
+                        // Nếu là bình luận thứ 6 trở đi (index >= 5), thêm class ẩn và style display none
+                        $is_hidden = ($index >= 5) ? 'hidden-review' : '';
+                        $display_style = ($index >= 5) ? 'display: none;' : '';
+                ?>
+                    <div class="review-item <?php echo $is_hidden; ?>" style="<?php echo $display_style; ?>">
+                        <div class="reviewer-avatar"><img src="/assets/user/img/logo_user.png" alt="User"></div>
+                        <div class="reviewer-info">
+                            <h4><?php echo htmlspecialchars($rev['ten_kh']); ?></h4>
+                            <div class="stars">
+                                <?php 
+                                    for($i = 1; $i <= 5; $i++) {
+                                        echo ($i <= $rev['sosao']) ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+                                    }
+                                ?>
+                            </div>
+                            <span class="review-date"><?php echo date('d/m/Y H:i', strtotime($rev['ngay_bl'])); ?></span>
+                            <p class="review-text"><?php echo nl2br(htmlspecialchars($rev['noidung'])); ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="review-item">
-                    <div class="reviewer-avatar"><img src="/assets/user/img/logo_user.png" alt="User"></div>
-                    <div class="reviewer-info">
-                        <h4>Trần Thị B</h4>
-                        <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
-                        <span class="review-date">10/03/2025</span>
-                        <p class="review-text">Sách hay, bìa thiết kế đẹp nhưng hộp lúc giao bị móp một chút. Đánh giá shop 4 sao.</p>
+                <?php endforeach; ?>
+
+                <?php if($total_reviews > 5): ?>
+                    <div class="show-all-reviews-wrap" style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                        <button id="btnToggleReviews" type="button" data-total="<?php echo $total_reviews; ?>" onclick="toggleReviews()" style="background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 8px 25px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: 0.3s;">
+                            <span>Xem tất cả <?php echo $total_reviews; ?> đánh giá</span> 
+                            <i class="fa-solid fa-chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
+                        </button>
                     </div>
-                </div>
-            </div>
-            <div class="write-review-box">
-                <textarea placeholder="Viết bình luận của bạn về cuốn sách này..."></textarea>
-                <button class="btn-primary">Gửi đánh giá</button>
-            </div>
+                <?php endif; ?>
+
+            <?php else: ?>
+                <p style="color: #777; font-style: italic; margin-bottom: 20px;">Sản phẩm này chưa có đánh giá nào.</p>
+            <?php endif; ?>
         </div>
+
+        <div class="write-review-box">
+            <?php if(isset($_SESSION['user_login'])): ?>
+                <form action="/them-binh-luan" method="POST" style="width: 100%;">
+                    <input type="hidden" name="ma_sp" value="<?php echo $sp['ma_sp']; ?>">
+                    
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-weight: 600; color: #444; font-size: 14px;">Đánh giá của bạn:</label>
+                        <select name="sosao" style="padding: 5px; border-radius: 4px; border: 1px solid #ddd; outline: none; font-size: 14px; cursor: pointer;">
+                            <option value="5">⭐⭐⭐⭐⭐</option>
+                            <option value="4">⭐⭐⭐⭐</option>
+                            <option value="3">⭐⭐⭐</option>
+                            <option value="2">⭐⭐</option>
+                            <option value="1">⭐</option>
+                        </select>
+                    </div>
+
+                    <textarea name="noidung" placeholder="Viết bình luận của bạn về cuốn sách này..." required></textarea>
+                    <button type="submit" class="btn-primary">Gửi đánh giá</button>
+                </form>
+            <?php else: ?>
+                <div style="width: 100%; text-align: center; padding: 15px; background: #fff3cd; color: #856404; border-radius: 5px;">
+                    Vui lòng <a href="/dang-nhap" style="font-weight: bold; color: var(--primary-color);">Đăng nhập</a> để viết đánh giá.
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
 
     <div class="related-products-section">
             <div class="section-title-wrap">
@@ -217,6 +259,40 @@
         var input = document.getElementById('qtyInput');
         if(parseInt(input.value) > 1) {
             input.value = parseInt(input.value) - 1;
+        }
+    }
+    // Biến để lưu trạng thái: false là đang đóng, true là đang mở
+    let isReviewsExpanded = false;
+
+    // Hàm Bật/Tắt hiển thị bình luận
+    function toggleReviews() {
+        var hiddenReviews = document.querySelectorAll('.hidden-review');
+        var btn = document.getElementById('btnToggleReviews');
+        var btnText = btn.querySelector('span'); // Tìm thẻ span chứa chữ
+        var btnIcon = btn.querySelector('i');    // Tìm thẻ i chứa icon
+        var totalReviews = btn.getAttribute('data-total'); // Lấy tổng số đánh giá
+
+        if (!isReviewsExpanded) {
+            // TRẠNG THÁI MỞ RA
+            hiddenReviews.forEach(function(rev) {
+                rev.style.display = ''; // Hiện bình luận
+            });
+            btnText.innerText = 'Ẩn bớt đánh giá';
+            btnIcon.classList.remove('fa-chevron-down');
+            btnIcon.classList.add('fa-chevron-up'); // Đổi icon mũi tên lên
+            isReviewsExpanded = true;
+        } else {
+            // TRẠNG THÁI THU GỌN VÀO
+            hiddenReviews.forEach(function(rev) {
+                rev.style.display = 'none'; // Giấu bình luận đi
+            });
+            btnText.innerText = 'Xem tất cả ' + totalReviews + ' đánh giá';
+            btnIcon.classList.remove('fa-chevron-up');
+            btnIcon.classList.add('fa-chevron-down'); // Đổi icon mũi tên xuống
+            isReviewsExpanded = false;
+            
+            // Tính năng thêm: Tự động cuộn mượt mà lên đầu khu vực đánh giá để người dùng không bị hụt màn hình khi thu gọn
+            document.querySelector('.product-reviews-section').scrollIntoView({ behavior: 'smooth' });
         }
     }
 </script>

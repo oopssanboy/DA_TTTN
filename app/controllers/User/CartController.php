@@ -173,7 +173,7 @@ class CartController extends Controller {
             }
 
             if ($flag > 0) {
-                if ($_POST['pttt'] == 'ttknh') {
+                if ($phuongthuc_thanhtoan == 'ttknh') {
                     // COD
                     $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $_SESSION['user_order'][4], $_SESSION['user_order'][5], $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
                     foreach ($list_cart as $item) {
@@ -189,10 +189,14 @@ class CartController extends Controller {
                     ];
                     header("Location: /gio-hang");
                     exit;
-                } else if ($_POST['pttt'] == 'bank') {
+                } else if ($phuongthuc_thanhtoan == 'bank') {
                     // Chuyển khoản -> Qua trang thanh toán VNPAY/Momo (tuỳ bạn setup ở /thanh-toan)
-                    header("Location: /thanh-toan");
+                    header("Location: /thanh-toan-qr");
                     exit;
+                } else if ($phuongthuc_thanhtoan == 'momo') {
+                // Nếu là MoMo -> Nhảy sang hàm tạo QR MoMo
+                header("Location: /thanh-toan-momo");
+                exit;
                 }
             }
         }
