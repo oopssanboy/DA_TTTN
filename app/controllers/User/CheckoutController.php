@@ -120,7 +120,7 @@ $ipnUrl = trim($ipnUrl);
         // 4. ĐÓNG GÓI DỮ LIỆU
         $data = array(
             'partnerCode' => $partnerCode,
-            'partnerName' => "Tên doanh nghiệp SDK4ME",
+            'partnerName' => "Chapter One - The Beginning",
             "storeId" => "MOMONPMB20210629_1",
             'requestId' => $requestId,
             'amount' => $amount,
