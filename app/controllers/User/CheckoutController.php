@@ -70,6 +70,7 @@ class CheckoutController extends Controller {
              exit;
         }
     }
+
     // Hàm tạo link thanh toán MoMo
     public function momoPayment() {
         if (!isset($_SESSION['user_order']) || $_SESSION['user_order'][5] != 'momo') {
@@ -80,18 +81,18 @@ class CheckoutController extends Controller {
         $tongtien = $_SESSION['user_order'][1];
         $ma_kh = $_SESSION['user_order'][0];
 
-        // 1. THÔNG SỐ KẾT NỐI MÔI TRƯỜNG TEST CỦA MOMO (Dành cho đồ án)
+        // 1. THÔNG SỐ KẾT NỐI MÔI TRƯỜNG TEST CỦA MOMO
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-        $partnerCode = "MOMOBKUN20180529";
-        $accessKey = "klm05TvNCzjOaHX1";
-        $secretKey = "at67qH6mk8w5Y1nAmLSqDGS7GLr2SpVQ";
+        $partnerCode = "MOMO";
+        $accessKey = "accessKey";
+        $secretKey = "secretKey";
 
         // 2. THÔNG TIN ĐƠN HÀNG
         $orderInfo = "Thanh toan don hang sach Chapter One";
         $amount = (string)$tongtien;
         $orderId = time() . "_KH" . $ma_kh; // Tạo mã đơn hàng ngẫu nhiên không trùng lặp
-        $redirectUrl = "https://jenna-nonportrayable-inexperiencedly.ngrok-free.dev/xac-nhan-momo"; // Domain thật của bạn
-        $ipnUrl = "https://jenna-nonportrayable-inexperiencedly.ngrok-free.dev/xac-nhan-momo"; 
+        $redirectUrl = "https://huynhngocquan.id.vn/xac-nhan-momo"; // Domain thật của bạn
+        $ipnUrl = "https://huynhngocquan.id.vn/xac-nhan-momo"; 
         
         $requestId = time() . "";
         $requestType = "captureWallet";
@@ -125,10 +126,11 @@ class CheckoutController extends Controller {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
+        // Vượt rào SSL trên máy ảo
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        
         $result = curl_exec($ch);
-        echo $result; exit;
         curl_close($ch);
 
         $jsonResult = json_decode($result, true);
@@ -143,6 +145,7 @@ class CheckoutController extends Controller {
             exit;
         }
     }
+
     // Hàm xử lý kết quả MoMo trả về
     public function momoReturn() {
         // Lấy mã kết quả từ URL do MoMo ném về
@@ -168,7 +171,6 @@ class CheckoutController extends Controller {
 
             // 3. Thêm chi tiết và trừ tồn kho
             foreach ($list_cart as $item) {
-                // Chú ý: Hãy chắc chắn tên các cột này giống với DB của bạn
                 $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['size'], $item['soluong'], $item['giasp'], $item['loai_mau']);
                 $dacdiem_sp->update_tonkho($item['ma_sp'], $item['size'], $item['loai_mau'], $item['soluong'], 'giam');
             }
