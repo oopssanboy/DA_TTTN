@@ -83,9 +83,9 @@ class CheckoutController extends Controller {
 
         // 1. THÔNG SỐ KẾT NỐI MÔI TRƯỜNG TEST CỦA MOMO
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
-        $partnerCode = "MOMO";
-        $accessKey = "accessKey";
-        $secretKey = "secretKey";
+        $partnerCode = "MOMOBKUN20180529";
+$accessKey = "F8BBA842ECF85";
+$secretKey = "MOMOSECRETKEY";
 
         // 2. THÔNG TIN ĐƠN HÀNG
         $orderInfo = "Thanh_toan_don_hang";
@@ -151,6 +151,7 @@ $ipnUrl = trim($ipnUrl);
         $jsonResult = json_decode($result, true);
         echo "<pre>";
 print_r($jsonResult);
+echo hash_hmac("sha256", $rawHash, "secretKey");
 echo $rawHash;
 exit;
 
