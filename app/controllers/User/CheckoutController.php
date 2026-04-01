@@ -134,6 +134,9 @@ class CheckoutController extends Controller {
         curl_close($ch);
 
         $jsonResult = json_decode($result, true);
+        echo "<pre>";
+print_r($jsonResult);
+exit;
 
         // 6. KIỂM TRA PHẢN HỒI, NẾU ĐÚNG THÌ CHUYỂN TRANG
         if (isset($jsonResult['payUrl'])) {
