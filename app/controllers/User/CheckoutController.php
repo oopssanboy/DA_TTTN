@@ -88,18 +88,33 @@ class CheckoutController extends Controller {
         $secretKey = "secretKey";
 
         // 2. THÔNG TIN ĐƠN HÀNG
-        $orderInfo = "Thanh toan don hang sach Chapter One";
+        $orderInfo = "Thanh_toan_don_hang";
         $amount = (string)$tongtien;
         $orderId = time() . "_KH" . $ma_kh; // Tạo mã đơn hàng ngẫu nhiên không trùng lặp
         $redirectUrl = "https://huynhngocquan.id.vn/xac-nhan-momo"; // Domain thật của bạn
         $ipnUrl = "https://huynhngocquan.id.vn/xac-nhan-momo"; 
-        
+        $redirectUrl = trim($redirectUrl);
+$ipnUrl = trim($ipnUrl);
         $requestId = time() . "";
         $requestType = "captureWallet";
         $extraData = "";
 
         // 3. TẠO CHỮ KÝ BẢO MẬT (SIGNATURE) THEO CHUẨN MOMO
-        $rawHash = "accessKey=".$accessKey."&amount=".$amount."&extraData=".$extraData."&ipnUrl=".$ipnUrl."&orderId=".$orderId."&orderInfo=".$orderInfo."&partnerCode=".$partnerCode."&redirectUrl=".$redirectUrl."&requestId=".$requestId."&requestType=".$requestType;
+        
+        //$rawHash = "accessKey=".$accessKey."&amount=".$amount."&extraData=".$extraData."&ipnUrl=".$ipnUrl."&orderId=".$orderId."&orderInfo=".$orderInfo."&partnerCode=".$partnerCode."&redirectUrl=".$redirectUrl."&requestId=".$requestId."&requestType=".$requestType;
+        $rawHash = sprintf(
+    "accessKey=%s&amount=%s&extraData=%s&ipnUrl=%s&orderId=%s&orderInfo=%s&partnerCode=%s&redirectUrl=%s&requestId=%s&requestType=%s",
+    $accessKey,
+    $amount,
+    $extraData,
+    $ipnUrl,
+    $orderId,
+    $orderInfo,
+    $partnerCode,
+    $redirectUrl,
+    $requestId,
+    $requestType
+);
         $signature = hash_hmac("sha256", $rawHash, $secretKey);
 
         // 4. ĐÓNG GÓI DỮ LIỆU
@@ -136,6 +151,7 @@ class CheckoutController extends Controller {
         $jsonResult = json_decode($result, true);
         echo "<pre>";
 print_r($jsonResult);
+echo $rawHash;
 exit;
 
         // 6. KIỂM TRA PHẢN HỒI, NẾU ĐÚNG THÌ CHUYỂN TRANG
