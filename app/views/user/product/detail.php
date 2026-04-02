@@ -31,7 +31,12 @@
         </div>
 
         <div class="product-info-right">
-            <h1 class="product-title"><?php echo $sp['tensp']; ?></h1>
+            <h1 class="product-title"><?php echo $sp['tensp']; ?> <?php
+            if(!empty($data['rating_info'])){
+                echo "| ";
+                echo number_format($data['rating_info'],1);
+                echo "⭐";
+                } ?></h1>
             <p style="color: var(--text-muted); margin-bottom: 10px;">Mã sản phẩm: <strong><?php echo $sp['ma_sp']; ?></strong></p>
             
             <div class="product-price">
@@ -203,8 +208,9 @@
                 <?php
                     $list_product = $related_products;
 
-                    if (!empty($list_product) && count($list_product) > 0):
+                    if (!empty($list_product) && count($list_product) > 1):
                         foreach ($list_product as $rel_sp):
+                            if($rel_sp['ma_sp'] != $sp['ma_sp']):
                             $gia_ban = $rel_sp['giasp'];
                             $gia_goc = $gia_ban * 1.25; 
                             $phan_tram_giam = round((($gia_goc - $gia_ban) / $gia_goc) * 100);
@@ -229,6 +235,7 @@
                         </a>
                     </div>
                 <?php
+                        endif;
                         endforeach;
                     else:
                 ?>

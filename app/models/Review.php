@@ -6,7 +6,7 @@ class Review extends DB {
         $sql = "SELECT r.*, u.ten_kh 
                 FROM reviews r 
                 JOIN users u ON r.ma_kh = u.ma_kh 
-                WHERE r.ma_sp = ? 
+                WHERE r.ma_sp = ? AND r.trangthai = 1
                 ORDER BY r.ngay_bl DESC";
         return $this->select($sql, [$ma_sp]);
     }
@@ -24,7 +24,7 @@ class Review extends DB {
     // 3. Tính trung bình sao của sản phẩm
     public function getAverageRating($ma_sp) {
         $sql = "SELECT AVG(sosao) as avg_star, COUNT(ma_review) as total_review 
-                FROM reviews WHERE ma_sp = ?";
+                FROM reviews WHERE ma_sp = ? AND trangthai = 1";
         $result = $this->select($sql, [$ma_sp]);
         return $result ? $result[0] : ['avg_star' => 0, 'total_review' => 0];
     }

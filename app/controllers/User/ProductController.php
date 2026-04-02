@@ -12,17 +12,17 @@ class ProductController extends Controller {
         $sachModel = $this->model('Sach');
         $catModel = $this->model('Category');
         $reviewModel = $this->model('Review');
+        $nxbModel = $this->model('NXB');
 
         // 2. Lấy thông tin sách & đặc điểm
         $product_detail = $sachModel->getByid($id);
         $product_info = $sachModel->getAll_dacdiem_byid($id);
         $list_reviews = $reviewModel->getReviewsByProduct($id);
         $rating_info = $reviewModel->getAverageRating($id);
-
         // Kiểm tra xem sách có tồn tại không
         if (count($product_detail) > 0) {
             $sp = $product_detail[0];
-            
+            $sp['nxb'] = $nxbModel->getByid_nxb($sp['ma_nxb'])[0]['ten_nxb'];
             // 3. Lấy thông tin danh mục của sách đó
             $category_detail = $catModel->getByid_dm($sp['ma_danhmuc']);
             $c = count($category_detail) > 0 ? $category_detail[0] : ['ten_danhmuc' => 'Danh mục không tồn tại'];
@@ -33,7 +33,7 @@ class ProductController extends Controller {
         }
 
         // 4. Lấy danh sách sản phẩm liên quan (Ở đây lấy ngẫu nhiên/limit)
-        $related_products = $sachModel->getAll_limit8(); 
+        $related_products = $sachModel->getAll_bycartegory($sp['ma_danhmuc']); 
 
         // 5. Chuẩn bị dữ liệu truyền ra View
         $data = [
@@ -43,7 +43,7 @@ class ProductController extends Controller {
             'product_info' => $product_info,
             'related_products' => $related_products,
             'reviews' => $list_reviews,
-            'rating_info' => $rating_info
+            'rating_info' => $rating_info['avg_star']
         ];
 
         // 6. Gọi View

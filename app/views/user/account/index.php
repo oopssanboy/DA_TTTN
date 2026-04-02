@@ -37,7 +37,7 @@ $avatar = isset($_SESSION['user_avatar']) && !empty($_SESSION['user_avatar']) ? 
                         <div class="account-header">
                             <h2 class="section-title">Chỉnh sửa thông tin tài khoản</h2>
                         </div>
-                        <form action="/tai-khoan/cap-nhat-thong-tin" method="POST" class="account-form">
+                        <form action="/tai-khoan/cap-nhat-thong-tin" method="POST" class="account-form" onsubmit="confirmForm(event, 'Xác nhận lưu thay đổi?', this);">
                             <div class="form-group row">
                                 <label>Tên khách hàng</label>
                                 <input type="text" name="ten_kh" value="<?php echo $user_info['ten_kh']; ?>" required>
@@ -153,7 +153,7 @@ $avatar = isset($_SESSION['user_avatar']) && !empty($_SESSION['user_avatar']) ? 
                         <div class="account-header">
                             <h2 class="section-title">Đổi mật khẩu</h2>
                         </div>
-                        <form action="/tai-khoan/doi-mat-khau" method="POST" class="account-form">
+                        <form action="/tai-khoan/doi-mat-khau" method="POST" class="account-form" onsubmit="confirmForm(event, 'Xác nhận lưu thay đổi?', this);">
                             <div class="form-group row">
                                 <label>Mật khẩu mới</label>
                                 <input type="password" name="pass_new" required>
