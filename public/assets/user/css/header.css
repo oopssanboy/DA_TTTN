@@ -1,4 +1,7 @@
 /* ================== TỔNG QUAN HEADER ================== */
+body {
+    top: 0 !important;
+}
 .site-header {
     width: 100%;
     background-color: #151515;
@@ -316,6 +319,10 @@
 
 .site-header.header-scrolled {
     box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+}
+.skiptranslate > iframe.skiptranslate {
+    display: none !important;
+    visibility: hidden !important;
 }
 /* ================== 4. RESPONSIVE ĐIỆN THOẠI & TABLET ================== */
 @media (max-width: 768px) {

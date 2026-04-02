@@ -344,24 +344,9 @@ img {
 /* ============================================================
    7. KHUNG CHỨA SẢN PHẨM (product_mid.php)
 ============================================================ */
-.product-grid-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
 
 /* Định dạng cơ bản cho thẻ sản phẩm (nếu file product.css của bạn chưa có) */
-.product-item {
-    background-color: var(--bg-card);
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s;
-    border: 1px solid var(--border-color);
-}
-.product-item:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px);
-}
+
 
 /* ============================================================
    8. ÉP BUỘC ĐỒNG BỘ MÀU CHUNG CHO HEADER VÀ FOOTER (MÀU ĐEN)
@@ -603,3 +588,99 @@ img {
 }
 
 /* RESPONSIVE: Chuyển vị trí trên Điện thoại */
+
+    #intro-splash {
+        position: fixed;
+        top: 0; left: 0; 
+        width: 100vw; height: 100vh;
+        background: #050508; /* Nền đen sâu */
+        z-index: 999999;     /* Đè lên tất cả mọi thứ */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+        overflow: hidden;
+        perspective: 1000px; /* Bật chế độ góc nhìn 3D */
+        
+    }
+
+    /* 1. Lưới 3D di chuyển ở mặt sàn (Cực ảo) */
+    .splash-3d-grid {
+        position: absolute;
+        bottom: -50%; left: -50%; 
+        width: 200%; height: 200%;
+        background-image: 
+            linear-gradient(rgba(0, 212, 255, 0.4) 2px, transparent 2px),
+            linear-gradient(90deg, rgba(0, 212, 255, 0.4) 2px, transparent 2px);
+        background-size: 60px 60px;
+        /* Bẻ cong mặt phẳng 60 độ để tạo chiều sâu 3D */
+        transform: rotateX(60deg) translateY(0);
+        animation: gridMove 3s linear infinite;
+        z-index: 1;
+        /* Hiệu ứng làm mờ dần lưới ở phía xa chân trời */
+        -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
+    }
+
+    /* Hiệu ứng sàn di chuyển liên tục */
+    @keyframes gridMove {
+        0%   { transform: rotateX(60deg) translateY(0); }
+        100% { transform: rotateX(60deg) translateY(60px); }
+    }
+
+    /* 2. Nội dung chữ ở giữa không gian */
+    .splash-content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+    }
+
+    /* Chữ tiêu đề nổi khối phát sáng */
+    .splash-title {
+        font-size: 6vw;
+        font-weight: 900;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 15px;
+        margin-bottom: 10px;
+        /* Hiệu ứng Neon 2 lớp */
+        text-shadow: 0 0 20px #00d4ff, 0 0 50px #00d4ff;
+        animation: floatTitle 4s ease-in-out infinite; /* Lơ lửng */
+    }
+
+    .splash-subtitle {
+        font-size: 1.5vw;
+        color: #ddd;
+        letter-spacing: 8px;
+        margin-bottom: 60px;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+   
+    
+
+    /* Animation cho chữ */
+    @keyframes floatTitle {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-20px); }
+    }
+    @keyframes pulseText {
+        0%, 100% { opacity: 1; box-shadow: 0 0 15px rgba(0,212,255,0.5); }
+        50%      { opacity: 0.3; box-shadow: 0 0 0 rgba(0,212,255,0); }
+    }
+    
+    /* Class dùng để ẩn màn hình bằng JS */
+    .splash-hidden {
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* Responsive cho điện thoại */
+    @media (max-width: 768px) {
+        .splash-title { font-size: 10vw; letter-spacing: 8px; }
+        .splash-subtitle { font-size: 3vw; }
+    }
+
+    

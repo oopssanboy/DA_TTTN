@@ -1,5 +1,29 @@
 <?php require ROOT_DIR . '/app/views/user/layouts/header.php'; ?>
 
+<div id="intro-splash">
+    <div class="splash-3d-grid"></div>
+    <div class="splash-content">
+        <h1 class="splash-title">CHAPTER ONE</h1>
+        <p class="splash-subtitle">The Beginning</p>
+        </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const splash = document.getElementById('intro-splash');
+        if (!sessionStorage.getItem('hasSeenSplash')) {
+            sessionStorage.setItem('hasSeenSplash', 'true');
+       splash.addEventListener('click', function() {
+                splash.classList.add('splash-hidden');
+                setTimeout(() => {
+                    if(splash) splash.remove();
+                }, 800);
+            }); 
+            } else {
+            splash.style.display = 'none';
+            splash.remove();
+        }
+    });
+</script>
 <section class="hero-full-width">
     <?php include_once ROOT_DIR . '/app/views/user/slide/slide.php'; ?>    
 </section>

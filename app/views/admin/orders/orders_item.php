@@ -37,8 +37,10 @@
                             <?php 
                             if($od['phuongthuc_thanhtoan'] == "ttknh") {
                                 echo "<span class='badge badge-success'><i class='fa-solid fa-money-bill'></i> Thanh toán khi nhận hàng</span>";
-                            } else {
+                            } else if($od['phuongthuc_thanhtoan'] == "bank"){
                                 echo "<span class='badge' style='background:#e3f2fd; color:#1565c0;'><i class='fa-solid fa-building-columns'></i> Chuyển khoản ngân hàng</span>";
+                            }else {
+                                echo "<span class='badge row' style='background:#ecc9de; color:#1565c0;'><img src='https://upload.wikimedia.org/wikipedia/commons/a/a0/MoMo_Logo_App.svg' alt='MoMo' style='width: 20px; border-radius: 5px; margin-left: 35%'>&nbsp; MOMO</span>";
                             }
                             ?>
                         </td>

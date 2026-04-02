@@ -249,7 +249,7 @@ $router->mount('/admin', function () use ($router) {
 // ==========================================
 $router->set404(function () {
     header('HTTP/1.1 404 Not Found');
-    echo "<h1 style='text-align:center; padding-top: 50px; font-family: sans-serif;'>404 - Trang này không tồn tại!</h1>";
+    require_once ROOT_DIR . '/app/views/errors/404.php';
 });
 
 $router->run();

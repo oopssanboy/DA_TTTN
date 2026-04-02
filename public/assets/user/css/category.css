@@ -297,6 +297,46 @@
 }
 
 /* =======================================================
+   HIỆU ỨNG NHÂN VẬT/SẢCH NHẢY VỌT LÊN TRÊN KHI HOVER
+======================================================= */
+/* 1. Đảm bảo phần chứa ảnh cho phép ảnh trồi ra ngoài không bị cắt mất */
+.product-item .product_img {
+    position: relative;
+    overflow: visible !important; 
+}
+
+/* 2. Cấu hình chuyển động cho ảnh */
+.product-item .product_img img {
+    /* Chuyển động mượt mà với hiệu ứng nảy (cubic-bezier) */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+    
+    /* Cực kỳ quan trọng: Lấy mỏ neo ở dưới cùng, để khi phóng to nó chỉ trồi lên trên */
+    transform-origin: bottom center; 
+    
+    position: relative;
+    z-index: 1;
+}
+
+/* 3. Khi đưa chuột vào Card, ảnh bên trong sẽ thực hiện phép thuật */
+.product-item:hover .product_img img {
+    /* Phóng to ảnh lên 15% và đẩy trồi lên trên 25px */
+    transform: scale(1.10) translateY(-5px); 
+    
+    /* Thêm bóng đổ tách nền cho nhân vật (hiệu ứng 3D đổ bóng thực) */
+    filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
+    
+    z-index: 10;
+}
+
+/* (Tuỳ chọn) Nếu bạn muốn cái nền card phía sau chìm xuống một chút để làm nổi bật nhân vật hơn */
+.product-item {
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+.product-item:hover {
+    border-color: var(--primary-color);
+}
+
+/* =======================================================
    5. PHÂN TRANG (PAGINATION)
 ======================================================= */
 .cartegory_right_bottom {

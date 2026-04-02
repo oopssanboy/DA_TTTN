@@ -32,8 +32,8 @@
                     <div class="action-box lang-selector">
                         <span class="action-text"><i class="fa-solid fa-globe"></i> VN <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Tiếng Việt</a></li>
-                            <li><a href="#">English</a></li>
+                            <li><a href="javascript:void(0)" onclick="changeLanguage('vi')">Tiếng Việt</a></li>
+                            <li><a href="javascript:void(0)" onclick="changeLanguage('en')">English</a></li>
                         </ul>
                     </div>
 
@@ -121,10 +121,32 @@
     <script>
         window.addEventListener('scroll', function() {
             var header = document.getElementById('myHeader');
-            if (window.scrollY > 80) {
+            if (window.scrollY > 20) {
                 header.classList.add('header-scrolled');
             } else {
                 header.classList.remove('header-scrolled');
             }
         });
     </script>
+    <div id="google_translate_element" style="display: none;"></div>
+
+<script type="text/javascript">
+    // Khởi tạo Google Translate
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'vi', // Ngôn ngữ gốc của web là Tiếng Việt
+            includedLanguages: 'vi,en,zh-CN,ja,ko', // Các ngôn ngữ muốn hỗ trợ (Việt, Anh, Trung, Nhật, Hàn)
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // Hàm nhận lệnh từ nút bấm của bạn để đổi ngôn ngữ
+    function changeLanguage(langCode) {
+        var select = document.querySelector('select.goog-te-combo');
+        if (select) {
+            select.value = langCode;
+            select.dispatchEvent(new Event('change'));
+        }
+    }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
