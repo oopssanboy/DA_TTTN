@@ -1,6 +1,4 @@
-/* ==============================================
-   PERSONAL ACCOUNT MANAGEMENT PAGE (account.css)
-============================================== */
+
 .account-page {
     margin-top: 50px;
     margin-bottom: 70px;
@@ -20,7 +18,6 @@
     width: 75%; 
 }
 
-/* Sidebar Box */
 .account-info-box {
     padding: 30px 20px;
     text-align: center;
@@ -28,7 +25,6 @@
     margin-bottom: 25px;
 }
 
-/* AVATAR STYLE */
 .user-avatar-wrapper.account-page-avatar {
     display: flex;
     justify-content: center;
@@ -60,7 +56,6 @@
     text-transform: uppercase;
 }
 
-/* MENU TASKBAR */
 .account-menu-list {
     list-style: none;
     padding: 0;
@@ -94,17 +89,16 @@
 .account-menu-list li a:hover {
     background-color: #fafafa; 
     color: var(--primary-color);
-    padding-left: 25px; /* Hiệu ứng trượt nhẹ */
+    padding-left: 25px; 
 }
 
 .account-menu-list li a.active {
-    background-color: rgba(217, 119, 6, 0.1); /* Màu cam nhạt */
+    background-color: rgba(217, 119, 6, 0.1); 
     color: var(--primary-color);
     border-left: 4px solid var(--primary-color);
     font-weight: bold;
 }
 
-/* CONTENT BOX */
 .account-details-box {
     padding: 35px 40px;
     border-radius: 8px;
@@ -126,7 +120,6 @@
     margin-top: 5px;
 }
 
-/* FORMS */
 .account-form .form-group {
     display: flex;
     flex-direction: column;
@@ -162,7 +155,6 @@
     resize: none;
 }
 
-/* BẢNG ĐƠN HÀNG (TABLES) */
 .table-responsive {
     overflow-x: auto;
 }
@@ -188,7 +180,7 @@
     vertical-align: middle;
 }
 
-/* BADGES TRẠNG THÁI */
+
 .status-badge {
     display: inline-block;
     padding: 5px 10px;
@@ -210,7 +202,6 @@
     color: #d93025;
 }
 
-/* NÚT THAO TÁC (Action Buttons) */
 .action-btns {
     display: flex;
     justify-content: center;
@@ -243,8 +234,6 @@
 .btn-cancel:hover { 
     background-color: #cc0000; color: white; 
 }
-
-/* Thông tin Text Display */
 .profile-info-display p {
     font-size: 15px;
     margin-bottom: 15px;
@@ -257,7 +246,6 @@
     color: #555;
 }
 
-/* Box chi tiết đơn hàng */
 .order-info-card {
     background-color: #f9f9f9;
     padding: 20px;
@@ -274,7 +262,6 @@
     font-size: 14px;
 }
 
-/* Responsive Mobile */
 @media (max-width: 768px) {
     .account-layout {
         flex-direction: column; 

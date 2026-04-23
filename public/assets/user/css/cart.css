@@ -1,6 +1,4 @@
-/* =======================================================
-   TRANG GIỎ HÀNG (CART PAGE)
-======================================================= */
+
 .cart-page {
     margin-top: 30px;
     margin-bottom: 60px;
@@ -20,7 +18,7 @@
 .breadcrumb {
     margin-bottom: 10px;
     margin-top: 10px;
-    background-color: var(--bg-card); /* Lấy biến từ style.css */
+    background-color: var(--bg-card); 
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px 15px;
@@ -37,7 +35,7 @@
 .breadcrumb span {
     margin: 0 5px;
 }
-/* --- CỘT TRÁI: SẢN PHẨM --- */
+
 .cart-left-col {
     width: 65%;
 }
@@ -77,7 +75,7 @@
 }
 
 .item-info {
-    flex: 1; /* Chiếm không gian còn lại */
+    flex: 1; 
 }
 .item-name {
     font-size: 15px;
@@ -106,9 +104,9 @@
     font-size: 15px;
     color: var(--text-main);
 }
-.item-price-mobile { display: none; } /* Ẩn trên máy tính */
+.item-price-mobile { display: none; } 
 
-/* Khối số lượng giống trang chi tiết */
+
 .item-quantity {
     width: 120px;
     display: flex;
@@ -138,10 +136,10 @@
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
     font-size: 14px;
-    pointer-events: none; /* Khách không thể gõ chữ linh tinh vào */
+    pointer-events: none;
 }
 
-/* Nút xóa */
+
 .item-action {
     width: 40px;
     text-align: right;
@@ -152,16 +150,16 @@
     transition: 0.2s;
 }
 .btn-delete-item:hover {
-    color: #d0011b; /* Đỏ khi di chuột */
+    color: #d0011b; 
 }
 
-/* --- CỘT PHẢI: THANH TOÁN --- */
+
 .cart-right-col {
     width: 35%;
 }
 .checkout-box {
     padding: 25px;
-    position: sticky; /* Trượt theo màn hình */
+    position: sticky; 
     top: 90px;
 }
 
@@ -215,7 +213,7 @@
 }
 .checkout-form input:focus, .checkout-form textarea:focus { border-color: var(--primary-color); }
 .checkout-form textarea { height: 70px; resize: none; }
-/* Tùy chọn Chọn thông tin giao hàng */
+
 .address-options {
     margin: 5px 0;
     display: flex;
@@ -274,7 +272,7 @@
 }
 
 
-/* --- RESPONSIVE MOBILE --- */
+
 @media (max-width: 992px) {
     .cart-layout { flex-direction: column; }
     .cart-left-col, .cart-right-col { width: 100%; }
@@ -283,7 +281,7 @@
 
 @media (max-width: 768px) {
     .cart-item-row { flex-wrap: wrap; position: relative; padding-bottom: 25px; }
-    .item-price { display: none; } /* Ẩn giá cột riêng */
+    .item-price { display: none; } 
     .item-price-mobile { display: block; color: var(--primary-color); font-weight: 700; margin-top: 5px; }
     .item-quantity { margin-top: 10px; width: auto; }
     .item-action { position: absolute; bottom: 10px; right: 45px; }

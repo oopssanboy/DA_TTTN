@@ -1,20 +1,18 @@
-/* ============================================================
-   1. KHỞI TẠO BIẾN & MÀU SẮC (THEME SÁNG - CLEAN E-COMMERCE)
-============================================================ */
+
 :root {
-    --bg-body: #f0f2f5;             /* Nền trang: Xám sáng */
-    --bg-card: #ffffff;             /* Nền khối nội dung: Trắng tinh */
-    --bg-header-footer: #151515;    /* Nền Header/Footer: Đen nhám */
+    --bg-body: #f0f2f5;             
+    --bg-card: #ffffff;             
+    --bg-header-footer: #151515;   
     
-    --text-main: #333333;           /* Chữ chính: Đen xám (dễ đọc trên nền sáng) */
-    --text-muted: #777777;          /* Chữ phụ: Xám mờ */
-    --text-light: #ffffff;          /* Chữ trắng (dùng cho nút bấm, text trên nền đen) */
+    --text-main: #333333;          
+    --text-muted: #777777;         
+    --text-light: #ffffff;          
     
-    --primary-color: #d97706;       /* Điểm nhấn: Cam đất */
-    --primary-hover: #b45f06;       /* Cam đất đậm khi hover */
+    --primary-color: #d97706;       
+    --primary-hover: #b45f06;      
     
-    --border-color: #e8e8e8;        /* Màu viền nhẹ nhàng */
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); /* Đổ bóng nhẹ cho các khối trắng */
+    --border-color: #e8e8e8;       
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); 
     --shadow-md: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -28,7 +26,7 @@
     flex-wrap: wrap;
 }
 
-/* Đổi class từ dark-theme sang light-theme nếu cần, ở đây set trực tiếp vào body */
+
 body {
     background-color: var(--bg-body);
     color: var(--text-main);
@@ -56,16 +54,14 @@ img {
     display: block;
 }
 
-/* Khung giới hạn nội dung nằm giữa màn hình (1200px) */
+
 .container-main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
-/* ============================================================
-   2. CÁC NÚT BẤM & TIÊU ĐỀ DÙNG CHUNG
-============================================================ */
+
 .btn-primary {
     display: inline-block;
     background-color: var(--primary-color);
@@ -85,12 +81,12 @@ img {
     color: var(--primary-color);
 }
 
-/* Khoảng cách giữa các khối trên trang chủ */
+
 .home-section {
     margin: 50px 0;
 }
 
-/* Khung Tiêu đề của mỗi section */
+
 .section-title-wrap {
     display: flex;
     justify-content: space-between;
@@ -105,11 +101,11 @@ img {
     font-size: 22px;
     font-weight: 800;
     text-transform: uppercase;
-    color: #111111; /* Đen đậm cho tiêu đề */
+    color: #111111; 
     margin: 0;
 }
 
-/* Gạch chân màu cam dưới tiêu đề */
+
 .section-title-wrap::after {
     content: '';
     position: absolute;
@@ -134,9 +130,7 @@ img {
     transform: translateX(3px); 
 }
 
-/* ============================================================
-   3. HERO SECTION (BANNER SLIDE TRÀN VIỀN)
-============================================================ */
+
 .hero-full-width {
     width: 100vw;
     position: relative;
@@ -159,7 +153,6 @@ img {
     padding: 0 15px;
 }
 
-/* Banner Lớn */
 .hero-main-banner {
     background-color: var(--bg-card);
     border-radius: 8px;
@@ -192,7 +185,6 @@ img {
     z-index: 2;
 }
 
-/* 3 Banner Nhỏ (Đổi sang thẻ trắng) */
 .hero-side-banners {
     display: grid;
     grid-template-rows: repeat(3, 1fr);
@@ -224,9 +216,7 @@ img {
     font-weight: 700;
 }
 
-/* ============================================================
-   4. FEATURES SECTION (4 ICON DỊCH VỤ)
-============================================================ */
+
 .features-layout {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -234,7 +224,7 @@ img {
     text-align: center;
     margin: 20px 0 40px 0;
     padding: 30px 0;
-    background-color: var(--bg-card); /* Thẻ nền trắng */
+    background-color: var(--bg-card); 
     border-radius: 8px;
     box-shadow: var(--shadow-sm);
 }
@@ -256,9 +246,7 @@ img {
     color: var(--text-main);
 }
 
-/* ============================================================
-   5. KHỐI GIỚI THIỆU THƯƠNG HIỆU
-============================================================ */
+
 .intro-section {
     background-color: #151515;
     border: 1px solid var(--border-color);
@@ -284,9 +272,7 @@ img {
     margin: 0 auto 25px auto;
 }
 
-/* ============================================================
-   6. BANNER LỚN CHẶN NGANG (SÁCH VỀ CUỘC SỐNG - TRÀN VIỀN)
-============================================================ */
+
 .life-books-banner {
     width: 100vw;
     position: relative;
@@ -311,7 +297,7 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.4); /* Làm mờ ảnh để chữ trắng nổi lên */
+    filter: brightness(0.4); 
     z-index: 1;
 }
 
@@ -341,33 +327,26 @@ img {
     text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
 }
 
-/* ============================================================
-   7. KHUNG CHỨA SẢN PHẨM (product_mid.php)
-============================================================ */
-
-/* Định dạng cơ bản cho thẻ sản phẩm (nếu file product.css của bạn chưa có) */
 
 
-/* ============================================================
-   8. ÉP BUỘC ĐỒNG BỘ MÀU CHUNG CHO HEADER VÀ FOOTER (MÀU ĐEN)
-============================================================ */
+
+
+
+
 .site-header, .site-footer {
     background-color: var(--bg-header-footer) !important;
     color: var(--text-light) !important;
 }
 
 .site-header.header-scrolled {
-    background-color: #0a0a0a !important; /* Đen kịt khi cuộn */
+    background-color: #0a0a0a !important; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .footer-bottom {
-    background-color: #000000 !important; /* Đen tuyền cho dải dưới cùng */
+    background-color: #000000 !important; 
 }
 
-/* ============================================================
-   9. RESPONSIVE
-============================================================ */
 @media (max-width: 1024px) {
     .hero-layout {
         grid-template-columns: 1fr;
@@ -416,7 +395,7 @@ img {
     }
     .floating-contact {
         top: auto;
-        bottom: 30px; /* Đẩy xuống góc dưới cùng bên phải để đỡ che nội dung */
+        bottom: 30px; 
         transform: none;
         gap: 12px;
     }
@@ -429,15 +408,13 @@ img {
 }
 
 
-/* =======================================================
-   GLOBAL CUSTOM MODAL (Hộp thoại Xác nhận/Thông báo)
-======================================================= */
+
 .custom-modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Nền mờ đen */
+    background-color: rgba(0, 0, 0, 0.6); 
     z-index: 99999;
-    display: none; /* Ẩn mặc định */
+    display: none; 
     justify-content: center;
     align-items: center;
     opacity: 0;
@@ -450,7 +427,7 @@ img {
 }
 
 .custom-modal-box {
-    background-color: var(--bg-card); /* Màu trắng */
+    background-color: var(--bg-card);
     padding: 30px;
     border-radius: 12px;
     width: 90%;
@@ -470,8 +447,8 @@ img {
     color: var(--primary-color);
     margin-bottom: 15px;
 }
-.custom-modal-icon.error { color: #d0011b; } /* Lỗi thì icon màu đỏ */
-.custom-modal-icon.info { color: #0066cc; }  /* Thông báo thì màu xanh */
+.custom-modal-icon.error { color: #d0011b; } 
+.custom-modal-icon.info { color: #0066cc; } 
 
 .custom-modal-box h3 {
     font-size: 22px;
@@ -514,9 +491,7 @@ img {
 
 
 
-/* =======================================================
-   BỘ NÚT LIÊN HỆ NỔI (FLOATING CONTACT)
-======================================================= */
+
 .floating-contact {
     position: fixed;
     right: 20px;
@@ -549,7 +524,6 @@ img {
     color: white;
 }
 
-/* Hiệu ứng sóng tỏa ra xung quanh (Pulse) */
 .contact-btn::before {
     content: '';
     position: absolute;
@@ -560,7 +534,7 @@ img {
     z-index: -1;
 }
 
-/* Màu chuẩn của Zalo */
+
 .zalo-btn {
     background-color: #0068ff; 
     font-weight: 800;
@@ -569,32 +543,32 @@ img {
 }
 .zalo-btn::before { border-color: #0068ff; }
 
-/* Màu gradient chuẩn của Messenger */
+
 .mess-btn {
     background: linear-gradient(45deg, #00B2FF, #006AFF); 
 }
 .mess-btn::before { border-color: #00B2FF; }
 
-/* Màu xanh lá của Hotline */
+
 .phone-btn {
     background-color: #28a745; 
 }
 .phone-btn::before { border-color: #28a745; }
 
-/* Animation gợn sóng */
+
 @keyframes pulse {
     0% { transform: scale(1); opacity: 0.8; }
     100% { transform: scale(1.6); opacity: 0; }
 }
 
-/* RESPONSIVE: Chuyển vị trí trên Điện thoại */
+
 
     #intro-splash {
         position: fixed;
         top: 0; left: 0; 
         width: 100vw; height: 100vh;
-        background: #050508; /* Nền đen sâu */
-        z-index: 999999;     /* Đè lên tất cả mọi thứ */
+        background: #050508; 
+        z-index: 999999;    
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -602,11 +576,10 @@ img {
         cursor: pointer;
         transition: opacity 0.8s ease, visibility 0.8s ease;
         overflow: hidden;
-        perspective: 1000px; /* Bật chế độ góc nhìn 3D */
+        perspective: 1000px; 
         
     }
 
-    /* 1. Lưới 3D di chuyển ở mặt sàn (Cực ảo) */
     .splash-3d-grid {
         position: absolute;
         bottom: -50%; left: -50%; 
@@ -615,28 +588,28 @@ img {
             linear-gradient(rgba(0, 212, 255, 0.4) 2px, transparent 2px),
             linear-gradient(90deg, rgba(0, 212, 255, 0.4) 2px, transparent 2px);
         background-size: 60px 60px;
-        /* Bẻ cong mặt phẳng 60 độ để tạo chiều sâu 3D */
+       
         transform: rotateX(60deg) translateY(0);
         animation: gridMove 3s linear infinite;
         z-index: 1;
-        /* Hiệu ứng làm mờ dần lưới ở phía xa chân trời */
+       
         -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%);
     }
 
-    /* Hiệu ứng sàn di chuyển liên tục */
+   
     @keyframes gridMove {
         0%   { transform: rotateX(60deg) translateY(0); }
         100% { transform: rotateX(60deg) translateY(60px); }
     }
 
-    /* 2. Nội dung chữ ở giữa không gian */
+
     .splash-content {
         position: relative;
         z-index: 10;
         text-align: center;
     }
 
-    /* Chữ tiêu đề nổi khối phát sáng */
+   
     .splash-title {
         font-size: 6vw;
         font-weight: 900;
@@ -644,9 +617,8 @@ img {
         text-transform: uppercase;
         letter-spacing: 15px;
         margin-bottom: 10px;
-        /* Hiệu ứng Neon 2 lớp */
         text-shadow: 0 0 20px #00d4ff, 0 0 50px #00d4ff;
-        animation: floatTitle 4s ease-in-out infinite; /* Lơ lửng */
+        animation: floatTitle 4s ease-in-out infinite;
     }
 
     .splash-subtitle {
@@ -661,7 +633,7 @@ img {
    
     
 
-    /* Animation cho chữ */
+  
     @keyframes floatTitle {
         0%, 100% { transform: translateY(0); }
         50%      { transform: translateY(-20px); }
@@ -670,14 +642,13 @@ img {
         0%, 100% { opacity: 1; box-shadow: 0 0 15px rgba(0,212,255,0.5); }
         50%      { opacity: 0.3; box-shadow: 0 0 0 rgba(0,212,255,0); }
     }
-    
-    /* Class dùng để ẩn màn hình bằng JS */
+  
     .splash-hidden {
         opacity: 0 !important;
         visibility: hidden !important;
     }
 
-    /* Responsive cho điện thoại */
+   
     @media (max-width: 768px) {
         .splash-title { font-size: 10vw; letter-spacing: 8px; }
         .splash-subtitle { font-size: 3vw; }

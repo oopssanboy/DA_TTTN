@@ -1,28 +1,26 @@
-/* =======================================================
-   GIAO DIỆN ADMIN (DỰA TRÊN ACCOUNT.CSS)
-======================================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #d97706; /* Màu cam chủ đạo */
-    --bg-body: #f0f2f5; /* Nền xám sáng */
-    --bg-card: #ffffff; /* Nền trắng thẻ */
+    --primary-color: #d97706; 
+    --bg-body: #f0f2f5; 
+    --bg-card: #ffffff; 
     --text-main: #333333;
     --text-muted: #777777;
     --border-color: #e8e8e8;
     
-    --bg-body: #f0f2f5;             /* Nền trang: Xám sáng */
-    --bg-card: #ffffff;             /* Nền khối nội dung: Trắng tinh */
-    --bg-header-footer: #151515;    /* Nền Header/Footer: Đen nhám */
+    --bg-body: #f0f2f5;             
+    --bg-card: #ffffff;           
+    --bg-header-footer: #151515;    
     
-         /* Chữ phụ: Xám mờ */
-    --text-light: #ffffff;          /* Chữ trắng (dùng cho nút bấm, text trên nền đen) */
+      
+    --text-light: #ffffff;          
     
-    --primary-color: #d97706;       /* Điểm nhấn: Cam đất */
-    --primary-hover: #b45f06;       /* Cam đất đậm khi hover */
+    --primary-color: #d97706;       
+    --primary-hover: #b45f06;       
     
-    --border-color: #e8e8e8;        /* Màu viền nhẹ nhàng */
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); /* Đổ bóng nhẹ cho các khối trắng */
+    --border-color: #e8e8e8;        
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); 
     --shadow-md: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -37,14 +35,14 @@ body {
     
 }
 
-/* --- BỐ CỤC CHÍNH (SIDEBAR + CONTENT) --- */
+
 .admin-wrapper {
     display: flex;
     min-height: 100vh;
     
 }
 
-/* Cột trái (Sidebar) */
+
 .admin-sidebar {
     width: 260px;
     background-color: var(--bg-card);
@@ -72,7 +70,7 @@ body {
     border: 3px solid var(--primary-color);
     padding: 3px;
     display: block;
-    margin: 0 auto; /* Căn giữa tuyệt đối */
+    margin: 0 auto; 
 }
 
 .admin-name {
@@ -123,7 +121,7 @@ body {
     color: #d0011b;
 }
 
-/* Cột phải (Main Content) */
+
 .admin-main {
     flex: 1;
     padding: 30px;
@@ -147,7 +145,6 @@ body {
     color: #111;
 }
 
-/* --- BẢNG (TABLES) --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -178,7 +175,7 @@ th {
 
 tr:hover { background-color: #fdfdfd; }
 
-/* --- NÚT BẤM (BUTTONS) --- */
+
 .btn {
     display: inline-block;
     padding: 8px 15px;
@@ -226,7 +223,6 @@ tr:hover { background-color: #fdfdfd; }
     color: #eee;
 }
 
-/* --- FORM --- */
 input[type="text"], input[type="number"], select, textarea {
     width: 100%;
     padding: 10px 15px;
@@ -240,7 +236,7 @@ input[type="text"], input[type="number"], select, textarea {
 input:focus, select:focus, textarea:focus { border-color: var(--primary-color); }
 .form-group-inline { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
 
-/* Trạng thái */
+
 .badge { padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; background: #eee; }
 .badge-success { background: #e6f4ea; color: #1e8e3e; }
 .badge-danger { background: #fce8e6; color: #d93025; }
@@ -269,10 +265,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     color: #555;
 }
 
-/* watch_order_item_css */
-/* =======================================================
-   CHI TIẾT ĐƠN HÀNG (WATCH ORDER ITEM)
-======================================================= */
+
 .order-detail-title {
     margin-bottom: 5px;
     border: none;
@@ -287,7 +280,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     font-weight: 700;
 }
 
-/* Khối cập nhật trạng thái */
 .status-update-box {
     background-color: #fafafa;
     padding: 20px;
@@ -296,7 +288,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
 }
 
 .status-update-box .form-group-inline {
-    margin-bottom: 0; /* Ghi đè margin mặc định của form-group-inline */
+    margin-bottom: 0; 
 }
 
 .status-label {
@@ -309,7 +301,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     background: #fff;
 }
 
-/* Bảng sản phẩm */
 .product-img-sm {
     width: 60px;
     height: 80px;
@@ -335,7 +326,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     font-weight: bold;
 }
 
-/* Dòng tổng tiền */
+
 .total-row {
     background-color: #fff9f0;
 }
@@ -353,7 +344,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     text-align: center;
 }
 
-/* Nút điều hướng */
+
 .action-nav-group {
     margin-top: 30px;
     display: flex;
@@ -364,11 +355,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     padding: 10px 20px;
 }
 
-/* =======================================================
-   NÚT TOGGLE & OVERLAY (CHO MOBILE)
-======================================================= */
+
 .mobile-menu-toggle {
-    display: none; /* Mặc định ẩn trên máy tính */
+    display: none; 
     margin-bottom: 20px;
 }
 
@@ -387,7 +376,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     box-shadow: 0 4px 6px rgba(217, 119, 6, 0.2);
 }
 
-/* Lớp nền đen mờ phủ lên nội dung khi mở Menu */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -404,7 +392,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
 }
 
 
-/* form-group-input */
+
 .account-form .form-group {
     display: flex;
     flex-direction: column;
@@ -439,9 +427,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     height: 100px;
     resize: none;
 }
-/* =======================================================
-   RESPONSIVE CHO TRANG ADMIN (MOBILE & TABLET)
-======================================================= */
+
 @media (max-width: 992px) {
     .admin-sidebar { width: 220px; }
     .admin-main { padding: 20px; }
@@ -455,49 +441,47 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
     
     .admin-main { 
         padding: 15px; 
-        padding-bottom: 80px; /* Quan trọng: Chừa khoảng trống dưới đáy để nội dung không bị thanh menu đè lên */
+        padding-bottom: 80px;
         overflow: visible !important;
     }
 
-    /* --- ĐƯA NÚT MENU XUỐNG ĐÁY MÀN HÌNH (BOTTOM BAR) --- */
+   
     .mobile-menu-toggle {
         display: block; 
-        position: fixed; /* Cố định tuyệt đối trên màn hình */
-        bottom: 0;       /* Nằm sát đáy */
+        position: fixed; 
+        bottom: 0;       
         left: 0;
         width: 100%;
         z-index: 9990;
         background-color: var(--bg-card); 
         padding: 10px 15px;
         margin: 0; 
-        box-shadow: 0 -4px 15px rgba(0,0,0,0.1); /* Đổ bóng ngược lên trên */
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.1); 
     }
 
     .btn-toggle-sidebar {
-        width: 100%; /* Phóng to nút bấm tràn viền */
+        width: 100%; 
         justify-content: center;
         padding: 14px;
         font-size: 16px;
     }
 
-    /* 1. XỬ LÝ THANH SIDEBAR THÀNH MENU TRƯỢT ẨN (DRAWER) */
     .admin-sidebar {
         position: fixed;
         top: 0;
-        left: -280px; /* Ẩn hẳn sang mép trái màn hình */
+        left: -280px; 
         width: 260px;
         height: 100vh;
-        z-index: 9999; /* Đè lên tất cả mọi thứ, kể cả header đen */
-        transition: left 0.3s ease; /* Hiệu ứng trượt mượt mà */
+        z-index: 9999; 
+        transition: left 0.3s ease; 
         box-shadow: 5px 0 15px rgba(0,0,0,0.2);
         flex-direction: column;
     }
 
     .admin-sidebar.show {
-        left: 0; /* Trượt ra màn hình khi có class 'show' */
+        left: 0; 
     }
 
-    /* Phục hồi lại style của Profile và Menu như trên máy tính */
     .admin-profile {
         display: block;
         padding: 30px 20px 20px;
@@ -527,8 +511,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary-color); 
         color: var(--primary-color);
         border-right: 4px solid var(--primary-color);
     }
-    
-    /* 2. CÁC TỐI ƯU KHÁC CHO MOBILE (BẢNG, FORM) */
+ 
     
     .card-box { min-height: auto; }
     .page-title { font-size: 18px; margin-bottom: 15px; }

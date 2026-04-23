@@ -1,18 +1,18 @@
 
 <div class="cartegory_right_content">
     <?php
-        // Đảm bảo lấy danh sách sản phẩm nếu biến chưa được khởi tạo từ trang cha
+
         if (!isset($list_product)) {
-            // Tạm thời giữ new Sach() nếu bạn chưa truyền từ Controller
+       
             if (class_exists('Sach')) {
                 $product = new Sach();
-                $list_product = $product->getAll_limit8();
+                $list_product = $product->getAll_limit8($tab ?? "");   
             }
         }
 
         if (!empty($list_product) && count($list_product) > 0):
             foreach ($list_product as $sp):
-                // --- GIẢ LẬP GIÁ GỐC VÀ KHUYẾN MÃI ---
+      
                 $gia_ban = $sp['giasp'];
                 $gia_goc = $gia_ban * 1.25; 
                 $phan_tram_giam = round((($gia_goc - $gia_ban) / $gia_goc) * 100);
@@ -38,6 +38,7 @@
                 </div>
     <?php
             endforeach;
+            unset($list_product);
         else:
     ?>
             <p class="empty-product">Không có sản phẩm nào để hiển thị.</p>

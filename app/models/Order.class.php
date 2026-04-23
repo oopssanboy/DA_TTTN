@@ -38,5 +38,6 @@ class Order extends DB{
         $sql = "UPDATE orders SET trangthai='".$trangthai."' WHERE ma_dh=" .$id;
         return $this->update($sql);
     }
+    
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
 class CartController extends Controller {
 
-    // Hàm kiểm tra đăng nhập dùng chung
+ 
     public function __construct() {
         if (!isset($_SESSION['user_login'])) {
             header('Location: /dang-nhap');
@@ -9,7 +9,7 @@ class CartController extends Controller {
         }
     }
 
-    // 1. Hiển thị trang giỏ hàng
+
     public function index() {
         $cart_model = $this->model('Cart');
         $ma_kh = $_SESSION['user_info']['ma_kh'];
@@ -38,7 +38,6 @@ class CartController extends Controller {
         $this->view('user/cart/index', $data);
     }
 
-    // 2. Thêm sản phẩm vào giỏ
     public function add() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ma_sp'])) {
             $ma_sp = $_POST['ma_sp'];
@@ -62,7 +61,6 @@ class CartController extends Controller {
         }
     }
 
-    // 3. Cập nhật số lượng (+ / -)
     public function updateQty($ma_cart, $type) {
         $cart = $this->model('Cart');
         $dacdiem_sp = $this->model('Dacdiem_sp');
@@ -105,11 +103,9 @@ class CartController extends Controller {
         exit;
     }
 
-    // 4. Xóa sản phẩm
     public function delete($ma_cart) {
         $cart = $this->model('Cart');
         
-        // Lấy số lượng trước khi xóa để trừ biến session
         $cart_item = $cart->getByid($ma_cart);
         $soluong_del = 0;
         if($cart_item){
@@ -129,7 +125,6 @@ class CartController extends Controller {
         exit;
     }
 
-    // 5. Thanh toán (Gộp logic thanh toán COD và Bank của bạn)
     public function checkout() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $ma_kh = $_POST['ma_kh'];
@@ -152,8 +147,7 @@ class CartController extends Controller {
             $order_item = $this->model('Order_item');
             
             $list_cart = $cart->getAllcart_info_byid($ma_kh);
-            
-            // Kiểm tra tồn kho
+
             $flag = 0;
             foreach ($list_cart as $it) {
                 $info_product = $dacdiem_sp->getAll_byid_sp($it['ma_sp']);
@@ -190,11 +184,11 @@ class CartController extends Controller {
                     header("Location: /gio-hang");
                     exit;
                 } else if ($phuongthuc_thanhtoan == 'bank') {
-                    // Chuyển khoản -> Qua trang thanh toán VNPAY/Momo (tuỳ bạn setup ở /thanh-toan)
+                   
                     header("Location: /thanh-toan-qr");
                     exit;
                 } else if ($phuongthuc_thanhtoan == 'momo') {
-                // Nếu là MoMo -> Nhảy sang hàm tạo QR MoMo
+                //  MoMo 
                 header("Location: /thanh-toan-momo");
                 exit;
                 }

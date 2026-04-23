@@ -20,7 +20,7 @@
                             <th>Mã KH</th>
                             <th>Thông tin khách hàng</th>
                             <th>Liên hệ</th>
-                            <th>Tài khoản</th>
+                            <th>Lịch sử mua hàng</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
@@ -29,13 +29,12 @@
                         <?php
                         if (isset($list_customers) && count($list_customers) > 0) {
                             foreach ($list_customers as $u) {
-                                // Xử lý hiển thị trạng thái
+                    
                                 $is_active = ($u['trangthai'] == 'hoatdong' || empty($u['trangthai']));
                                 $badge_status = $is_active ? 'badge-success' : 'badge-danger';
                                 $txt_status = $is_active ? 'Hoạt động' : 'Đã khóa';
+                 
                                 
-                                // Xử lý loại tài khoản đăng nhập (Thường, Google, Facebook)
-                                $auth_type = 'Thường';
                                 if (isset($u['auth_provider']) && !empty($u['auth_provider'])) {
                                     if ($u['auth_provider'] == 'google') {
                                         $auth_type = '<i class="fa-brands fa-google" style="color:#db4437;"></i> Google';
@@ -54,7 +53,7 @@
                                         <?= htmlspecialchars($u['email']) ?><br>
                                         <?= htmlspecialchars($u['sdt'] ?? '') ?>
                                     </td>
-                                    <td><span class="badge" style="background:#f0f2f5;"><?= $auth_type ?></span></td>
+                                    <td><span class="badge" style="background:#f0f2f5;"><a href="/admin/khach-hang/lich-su/<?= $u['ma_kh'] ?>">Xem lịch sử</a></span></td>
                                     <td><span class="badge <?= $badge_status ?>"><?= $txt_status ?></span></td>
                                     <td>
                                         <?php if (!$is_active): ?>

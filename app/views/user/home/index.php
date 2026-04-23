@@ -32,20 +32,25 @@
     <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">Sách mới tuyển chọn</h2>
-            <a href="/san-pham" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
-            <?php include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
+            
+            <?php 
+            $tab = '';
+            include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
         </div>
     </section>
 
     <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">Khuyến mãi - Giảm đến 25%</h2>
-            <a href="/san-pham" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
-            <?php include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
+            <?php 
+            $tab = '';
+            include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
         </div>
     </section>
 
@@ -60,10 +65,12 @@
     <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">Bán tốt nhất</h2>
-            <a href="/san-pham" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
-            <?php include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
+            <?php 
+            $tab = 'sachbanchay';
+            include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
         </div>
     </section>
 
@@ -73,16 +80,19 @@
     <div class="banner-overlay">
         <h2>Sách Về Cuộc Sống</h2>
         <p>Tuyển tập những cuốn sách truyền cảm hứng, chữa lành và thay đổi tư duy của bạn.</p>
-        <a href="/san-pham" class="btn-primary">Khám phá ngay</a>
+        <a href="/" class="btn-primary">Khám phá ngay</a>
     </div>
 </section>
 <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">TUYỂN TẬP CUỐN SÁCH HAY</h2>
-            <a href="/san-pham" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
-            <?php include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
+            
+            <?php 
+            $tab = 'sachhay';
+            include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
         </div>
     </section>
 </main> 

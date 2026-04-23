@@ -45,7 +45,7 @@
                             </ul>
                         <?php else: ?>
                             <?php 
-                                // Nếu có session hình ảnh thì lấy, không thì dùng avatar mặc định (đã cập nhật đường dẫn)
+                                
                                 $avatar = isset($_SESSION['user_avatar']) && !empty($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : '/assets/user/img/dora.png'; 
                                 $dashboard_link = isset($_SESSION['admin_login']) ? '/admin' : '/tai-khoan';
                             ?>
@@ -131,16 +131,15 @@
     <div id="google_translate_element" style="display: none;"></div>
 
 <script type="text/javascript">
-    // Khởi tạo Google Translate
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
-            pageLanguage: 'vi', // Ngôn ngữ gốc của web là Tiếng Việt
-            includedLanguages: 'vi,en,zh-CN,ja,ko', // Các ngôn ngữ muốn hỗ trợ (Việt, Anh, Trung, Nhật, Hàn)
+            pageLanguage: 'vi', 
+            includedLanguages: 'vi,en,zh-CN,ja,ko', 
             autoDisplay: false
         }, 'google_translate_element');
     }
 
-    // Hàm nhận lệnh từ nút bấm của bạn để đổi ngôn ngữ
+    
     function changeLanguage(langCode) {
         var select = document.querySelector('select.goog-te-combo');
         if (select) {

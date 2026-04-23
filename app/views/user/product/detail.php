@@ -17,7 +17,7 @@
                 <img id="mainProductImage" src="/uploads/books/<?php echo $sp['link_hinhanh']; ?>" alt="<?php echo $sp['tensp']; ?>">
             </div>
 
-            <div class="thumbnail-list-vertical-right">
+            <!-- <div class="thumbnail-list-vertical-right">
                 <div class="thumb-item active" onclick="changeImage(this, '/uploads/books/<?php echo $sp['link_hinhanh']; ?>')">
                     <img src="/uploads/books/<?php echo $sp['link_hinhanh']; ?>" alt="Thumb">
                 </div>
@@ -27,7 +27,7 @@
                 <div class="thumb-item" onclick="changeImage(this, '/uploads/books/sach_2.png')">
                     <img src="/uploads/books/sach_2.png" alt="Thumb">
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="product-info-right">
@@ -137,7 +137,7 @@
                 <?php 
                     $total_reviews = count($reviews);
                     foreach($reviews as $index => $rev): 
-                        // Nếu là bình luận thứ 6 trở đi (index >= 5), thêm class ẩn và style display none
+                       
                         $is_hidden = ($index >= 5) ? 'hidden-review' : '';
                         $display_style = ($index >= 5) ? 'display: none;' : '';
                 ?>
@@ -268,37 +268,37 @@
             input.value = parseInt(input.value) - 1;
         }
     }
-    // Biến để lưu trạng thái: false là đang đóng, true là đang mở
+   
     let isReviewsExpanded = false;
 
-    // Hàm Bật/Tắt hiển thị bình luận
+
     function toggleReviews() {
         var hiddenReviews = document.querySelectorAll('.hidden-review');
         var btn = document.getElementById('btnToggleReviews');
-        var btnText = btn.querySelector('span'); // Tìm thẻ span chứa chữ
-        var btnIcon = btn.querySelector('i');    // Tìm thẻ i chứa icon
-        var totalReviews = btn.getAttribute('data-total'); // Lấy tổng số đánh giá
+        var btnText = btn.querySelector('span'); 
+        var btnIcon = btn.querySelector('i');    
+        var totalReviews = btn.getAttribute('data-total'); 
 
         if (!isReviewsExpanded) {
-            // TRẠNG THÁI MỞ RA
+          
             hiddenReviews.forEach(function(rev) {
-                rev.style.display = ''; // Hiện bình luận
+                rev.style.display = ''; 
             });
             btnText.innerText = 'Ẩn bớt đánh giá';
             btnIcon.classList.remove('fa-chevron-down');
-            btnIcon.classList.add('fa-chevron-up'); // Đổi icon mũi tên lên
+            btnIcon.classList.add('fa-chevron-up'); 
             isReviewsExpanded = true;
         } else {
-            // TRẠNG THÁI THU GỌN VÀO
+    
             hiddenReviews.forEach(function(rev) {
-                rev.style.display = 'none'; // Giấu bình luận đi
+                rev.style.display = 'none'; 
             });
             btnText.innerText = 'Xem tất cả ' + totalReviews + ' đánh giá';
             btnIcon.classList.remove('fa-chevron-up');
-            btnIcon.classList.add('fa-chevron-down'); // Đổi icon mũi tên xuống
+            btnIcon.classList.add('fa-chevron-down'); 
             isReviewsExpanded = false;
             
-            // Tính năng thêm: Tự động cuộn mượt mà lên đầu khu vực đánh giá để người dùng không bị hụt màn hình khi thu gọn
+           
             document.querySelector('.product-reviews-section').scrollIntoView({ behavior: 'smooth' });
         }
     }

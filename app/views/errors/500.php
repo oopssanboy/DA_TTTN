@@ -20,7 +20,6 @@
             position: relative;
         }
 
-        /* Lưới không gian ảo phía sau */
         .cyber-grid {
             position: absolute;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -38,7 +37,6 @@
             text-align: center;
         }
 
-        /* Icon trôi nổi */
         .floating-icon {
             font-size: 4rem;
             color: #ff00c1;
@@ -52,7 +50,6 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* HIỆU ỨNG CHỮ GLITCH (NHIỄU SÓNG) */
         .glitch-text {
             font-size: 12vw;
             font-weight: 900;
@@ -111,7 +108,7 @@
             text-transform: uppercase;
         }
 
-        /* Nút quay về giao diện Neon */
+
         .btn-neon {
             display: inline-block;
             padding: 15px 40px;
@@ -151,7 +148,14 @@
         
         <p class="sub-text">Chương sách này không tồn tại trong hệ thống</p>
         
-        <a href="/" class="btn-neon"><i class="fa-solid fa-house-chimney"></i> Quay về Trang Chủ</a>
+        <a href="
+        <?php 
+            if (isset($_SESSION['admin_login']))
+                echo "/admin";
+            else 
+                echo "/";
+        ?>
+        " class="btn-neon"><i class="fa-solid fa-house-chimney"></i> Quay về Trang Chủ</a>
     </div>
 
     

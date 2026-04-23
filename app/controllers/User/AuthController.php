@@ -3,7 +3,6 @@
 class AuthController extends Controller
 {
 
-    // 1. Hiển thị form đăng nhập
     public function login()
     {
         if (isset($_SESSION['user_login']) || isset($_SESSION['admin_login'])) {
@@ -13,7 +12,7 @@ class AuthController extends Controller
         $this->view('user/auth/login', ['title' => 'Đăng nhập - Chapter One']);
     }
 
-    // 2. Xử lý logic đăng nhập
+
     public function processLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -24,19 +23,16 @@ class AuthController extends Controller
             $user = $userModel->checkLogin($email, $matkhau);
 
             if ($user) {
-                // ==========================================
-                // KIỂM TRA TRẠNG THÁI KHÓA TÀI KHOẢN
-                // ==========================================
+       
                 if (isset($user['trangthai']) && $user['trangthai'] == 'dakhoa') {
                     $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Từ chối truy cập', 'text' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin!'];
                     header('Location: /dang-nhap');
                     exit;
                 }
 
-                // Lưu thông tin cơ bản
+           
                 $_SESSION['user_info'] = $user;
 
-                // Xử lý Avatar
                 if (!empty($user['avatar'])) {
                     if (filter_var($user['avatar'], FILTER_VALIDATE_URL)) {
                         $_SESSION['user_avatar'] = $user['avatar'];
@@ -47,23 +43,20 @@ class AuthController extends Controller
                     $_SESSION['user_avatar'] = URLROOT . '/assets/user/img/dora.png';
                 }
 
-                // LẤY SỐ LƯỢNG GIỎ HÀNG TỪ DATABASE
                 $cartModel = $this->model('Cart');
                 $list_cart = $cartModel->getAllcart_info_byid($user['ma_kh']);
                 $total_qty = 0;
 
                 if ($list_cart != null) {
                     foreach ($list_cart as $item) {
-                        $total_qty += $item['soluong']; // Cộng dồn số lượng từng món
+                        $total_qty += $item['soluong']; 
                     }
                 }
 
-                // Khởi tạo session giỏ hàng
                 $_SESSION['user_cart'] = [
                     'count' => $total_qty
                 ];
 
-                // Phân quyền (Role: 1 là Admin, 0 là User)
                 if ($user['role'] == 1) {
                     $_SESSION['admin_login'] = true;
                     $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Xin chào Admin', 'text' => 'Đăng nhập thành công!'];
@@ -82,7 +75,6 @@ class AuthController extends Controller
         }
     }
 
-    // 3. Hiển thị form đăng ký
     public function register()
     {
         if (isset($_SESSION['user_login']) || isset($_SESSION['admin_login'])) {
@@ -92,7 +84,6 @@ class AuthController extends Controller
         $this->view('user/auth/register', ['title' => 'Đăng ký - Chapter One']);
     }
 
-    // 4. Xử lý logic đăng ký
     public function processRegister()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -116,10 +107,8 @@ class AuthController extends Controller
                 exit;
             }
 
-            // 1. Tạo mã OTP ngẫu nhiên 6 số
             $otp = rand(100000, 999999);
 
-            // 2. Lưu tạm thông tin người dùng và OTP vào Session (Hết hạn sau 5 phút)
             $_SESSION['register_temp'] = [
                 'ten_kh' => $ten_kh,
                 'email' => $email,
@@ -127,10 +116,10 @@ class AuthController extends Controller
                 'diachi' => $diachi,
                 'matkhau' => $matkhau,
                 'otp' => $otp,
-                'expires' => time() + 300 // 5 phút
+                'expires' => time() + 300 
             ];
 
-            // 3. Gọi helper gửi Email
+  
             require_once ROOT_DIR . '/app/helpers/Mailer.php';
             $subject = "Mã xác thực đăng ký tài khoản - Chapter One";
             $content = "<div style='font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;'>
@@ -146,7 +135,7 @@ class AuthController extends Controller
             exit;
         }
     }
-    // THÊM MỚI: Hiển thị form nhập OTP
+    
     public function verifyOTP()
     {
         if (!isset($_SESSION['register_temp'])) {
@@ -156,7 +145,7 @@ class AuthController extends Controller
         $this->view('user/auth/verify_otp', ['title' => 'Xác thực OTP - Chapter One']);
     }
 
-    // THÊM MỚI: Xử lý xác nhận OTP và Lưu chính thức vào DB
+   
     public function processVerifyOTP()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -169,7 +158,7 @@ class AuthController extends Controller
 
             $temp_data = $_SESSION['register_temp'];
 
-            // Kiểm tra thời gian hết hạn
+       
             if (time() > $temp_data['expires']) {
                 unset($_SESSION['register_temp']);
                 $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Hết hạn', 'text' => 'Mã OTP đã hết hạn. Vui lòng đăng ký lại!'];
@@ -177,13 +166,12 @@ class AuthController extends Controller
                 exit;
             }
 
-            // Kiểm tra tính hợp lệ của mã
             if ($otp_input == $temp_data['otp']) {
                 $userModel = $this->model('User');
                 $result = $userModel->register($temp_data['ten_kh'], $temp_data['email'], $temp_data['matkhau'], $temp_data['sdt'], $temp_data['diachi']);
 
                 if ($result) {
-                    unset($_SESSION['register_temp']); // Xóa dữ liệu tạm
+                    unset($_SESSION['register_temp']);
                     $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Tuyệt vời', 'text' => 'Đăng ký thành công. Vui lòng đăng nhập!'];
                     header('Location: /dang-nhap');
                 } else {
@@ -197,39 +185,34 @@ class AuthController extends Controller
             exit;
         }
     }
-    // =================================================================
-    // LUỒNG QUÊN MẬT KHẨU
-    // =================================================================
+  
 
-    // 1. Hiển thị form nhập Email
     public function forgotPassword() {
         $this->view('user/auth/forgot_password', ['title' => 'Quên mật khẩu - Chapter One']);
     }
 
-    // 1.1 Xử lý gửi OTP về Email
+
     public function processForgotPassword() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email = trim($_POST['email']);
             $userModel = $this->model('User');
 
-            // Kiểm tra email có tồn tại trong hệ thống không
+          
             if (!$userModel->checkEmailExist($email)) {
                 $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Lỗi', 'text' => 'Email này chưa được đăng ký trong hệ thống!'];
                 header('Location: /quen-mat-khau');
                 exit;
             }
 
-            // Tạo mã OTP 6 số
             $otp = rand(100000, 999999);
 
-            // Lưu tạm vào Session (Hết hạn sau 5 phút)
             $_SESSION['reset_temp'] = [
                 'email' => $email,
                 'otp' => $otp,
                 'expires' => time() + 300 
             ];
 
-            // Gửi mail
+
             require_once ROOT_DIR . '/app/helpers/Mailer.php';
             $subject = "Mã xác thực Đặt lại mật khẩu - Chapter One";
             $content = "<div style='font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;'>
@@ -246,7 +229,7 @@ class AuthController extends Controller
         }
     }
 
-    // 2. Hiển thị form nhập mã OTP
+ 
     public function verifyResetOTP() {
         if (!isset($_SESSION['reset_temp'])) {
             header('Location: /quen-mat-khau');
@@ -255,7 +238,7 @@ class AuthController extends Controller
         $this->view('user/auth/verify_reset_otp', ['title' => 'Xác thực OTP - Chapter One']);
     }
 
-    // 2.1 Xử lý kiểm tra mã OTP
+
     public function processVerifyResetOTP() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $otp_input = trim($_POST['otp']);
@@ -275,7 +258,7 @@ class AuthController extends Controller
             }
 
             if ($otp_input == $temp_data['otp']) {
-                // Đánh dấu là OTP đã xác thực thành công
+            
                 $_SESSION['reset_temp']['verified'] = true;
                 header('Location: /dat-lai-mat-khau');
             } else {
@@ -286,9 +269,9 @@ class AuthController extends Controller
         }
     }
 
-    // 3. Hiển thị form đổi mật khẩu mới
+ 
     public function resetPassword() {
-        // Phải qua bước OTP mới được vào trang này
+     
         if (!isset($_SESSION['reset_temp']) || !isset($_SESSION['reset_temp']['verified'])) {
             header('Location: /quen-mat-khau');
             exit;
@@ -296,7 +279,7 @@ class AuthController extends Controller
         $this->view('user/auth/reset_password', ['title' => 'Đặt lại mật khẩu - Chapter One']);
     }
 
-    // 3.1 Xử lý đổi mật khẩu
+
     public function processResetPassword() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!isset($_SESSION['reset_temp']) || !isset($_SESSION['reset_temp']['verified'])) {
@@ -315,11 +298,11 @@ class AuthController extends Controller
             }
 
             $userModel = $this->model('User');
-            // Cập nhật mật khẩu
+           
             $result = $userModel->updatePasswordByEmail($email, $matkhau_moi);
 
             if ($result) {
-                unset($_SESSION['reset_temp']); // Xóa session tạm
+                unset($_SESSION['reset_temp']); 
                 $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Thành công', 'text' => 'Mật khẩu đã được đổi thành công!'];
                 header('Location: /dang-nhap');
             } else {
@@ -330,7 +313,7 @@ class AuthController extends Controller
         }
     }
 
-    // 5. Đăng xuất
+
     public function logout()
     {
         session_unset();
@@ -346,11 +329,10 @@ class AuthController extends Controller
         $client->setClientId('929628426936-dqcpvn0avfsbbs9pq151c94arc3d4ave.apps.googleusercontent.com');
         $client->setClientSecret('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');
 
-        // Trỏ về đúng đường dẫn MVC
+      
         $redirect_uri = URLROOT . '/auth/google/callback';
         $client->setRedirectUri($redirect_uri);
 
-        // Tắt verify SSL trên localhost (Giống code cũ của bạn)
         $guzzleClient = new \GuzzleHttp\Client(['verify' => false]);
         $client->setHttpClient($guzzleClient);
 
@@ -392,9 +374,7 @@ class AuthController extends Controller
         }
     }
 
-    // ==========================================
-    // ĐĂNG NHẬP BẰNG FACEBOOK
-    // ==========================================
+    
     private function getFacebookClient()
     {
         return new \Facebook\Facebook([
@@ -410,7 +390,7 @@ class AuthController extends Controller
         $helper = $fb->getRedirectLoginHelper();
         $permissions = ['email', 'public_profile'];
 
-        // Trỏ về đúng đường dẫn MVC
+    
         $callbackUrl = URLROOT . '/auth/facebook/callback';
         $loginUrl = $helper->getLoginUrl($callbackUrl, $permissions);
 
@@ -444,14 +424,12 @@ class AuthController extends Controller
             $name = $fbUser->getField('name');
             $email = $fbUser->getField('email');
 
-            // Lấy link Avatar FB
             $avatar = '';
             $picture = $fbUser->getField('picture');
             if ($picture && !$picture->isSilhouette()) {
                 $avatar = $picture->getUrl();
             }
 
-            // Xử lý nếu user đăng ký FB bằng SĐT (Không có email)
             if (empty($email)) {
                 $email = $fbUser->getField('id') . '@facebook.com';
             }
@@ -467,23 +445,21 @@ class AuthController extends Controller
         }
     }
 
-    // ==========================================
-    // HÀM XỬ LÝ CHUNG LƯU DATABASE
-    // ==========================================
+
     private function handleSocialLogin($name, $email, $avatar, $token, $provider)
     {
         $userModel = $this->model('User');
         $checkUser = $userModel->checkEmailExist($email);
 
         if ($checkUser) {
-            // KIỂM TRA KHÓA TÀI KHOẢN
+          
             if (isset($checkUser['trangthai']) && $checkUser['trangthai'] == 'dakhoa') {
                 $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Bị khóa', 'text' => 'Tài khoản của bạn đã bị khóa!'];
                 header('Location: /dang-nhap');
                 exit;
             }
 
-            // Dùng hàm cập nhật của bạn
+        
             $userModel->update_token($checkUser['ma_kh'], $token);
             if (empty($checkUser['avatar'])) {
                 $userModel->update_avatar($avatar, $checkUser['ma_kh']);
@@ -491,15 +467,15 @@ class AuthController extends Controller
             $_SESSION['user_info'] = $checkUser;
             $_SESSION['user_avatar'] = !empty($checkUser['avatar']) ? $checkUser['avatar'] : $avatar;
         } else {
-            // TẠO TÀI KHOẢN MỚI
-            // Gợi ý: Chắc chắn hàm add_user_social / add_user_google trong User.class.php của bạn đã hỗ trợ truyền biến $avatar
+     
+           
             $userModel->add_user_social($name, $email, $token, $avatar);
             $newUser = $userModel->checkEmailExist($email);
             $_SESSION['user_info'] = $newUser;
             $_SESSION['user_avatar'] = $avatar;
         }
 
-        // Lấy số lượng giỏ hàng
+     
         $ma_kh = $_SESSION['user_info']['ma_kh'];
         $cartModel = $this->model('Cart');
         $list_cart = $cartModel->getAllcart_info_byid($ma_kh);
@@ -513,7 +489,7 @@ class AuthController extends Controller
 
         $_SESSION['user_cart'] = ['count' => $total_qty];
 
-        // Phân quyền
+
         if ($_SESSION['user_info']['role'] == 1) {
             $_SESSION['admin_login'] = true;
             header('Location: /admin');

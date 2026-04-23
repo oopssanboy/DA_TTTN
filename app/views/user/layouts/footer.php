@@ -63,11 +63,11 @@
 </div>
 
 <?php
-    // Lấy đường dẫn request thực tế do Router điều khiển
+   
     $current_url = $_SERVER['REQUEST_URI'];
     $show_floating_buttons = true;
 
-    // Thay đổi logic kiểm tra URL (dùng router links)
+ 
     if (strpos($current_url, '/admin') !== false || 
         strpos($current_url, '/dang-nhap') !== false || 
         strpos($current_url, '/dang-ky') !== false || 
@@ -95,7 +95,7 @@
 ?>
 
 <script>
-    // ----- LOGIC ĐIỀU KHIỂN HỘP THOẠI -----
+ 
     let currentConfirmCallback = null;
 
     function showGlobalModal(message, type = 'confirm', confirmCallback = null, title = null) {

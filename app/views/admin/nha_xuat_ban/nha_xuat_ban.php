@@ -14,7 +14,7 @@
             <h2 class="page-title">Quản Lý Nhà Xuất Bản</h2>
             
             <?php
-            // KIỂM TRA TRẠNG THÁI "EDIT"
+        
             if(isset($nxb_can_sua)) {
             ?>
                 <form action="/admin/nha-xuat-ban/sua/<?php echo $nxb_can_sua['ma_nxb']; ?>" method="POST" class="form-group-inline" onsubmit="confirmForm(event, 'Xác nhận lưu thay đổi?', this);">

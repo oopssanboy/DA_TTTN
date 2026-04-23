@@ -1,19 +1,18 @@
-/* Khung ngoài Footer */
+
 .site-footer {
-    background-color: #151515; /* Nền xám đen nhám */
+    background-color: #151515; 
     color: #aaaaaa;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     border-top: 1px solid #333;
     margin-top: 60px;
 }
 
-/* Phần nội dung chính 3 cột */
 .footer-main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 60px 15px;
     display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr; /* Tỉ lệ chia 3 cột (Cột 1 to nhất) */
+    grid-template-columns: 2fr 1fr 1.5fr; 
     gap: 40px;
 }
 
@@ -28,7 +27,6 @@
     letter-spacing: 1px;
 }
 
-/* Vạch màu cam dưới tiêu đề mỗi cột */
 .footer-col h3::after {
     content: '';
     position: absolute;
@@ -39,7 +37,7 @@
     background-color: #d97706; 
 }
 
-/* Cột 1: Brand */
+
 .brand-info p {
     line-height: 1.6;
     margin-bottom: 20px;
@@ -61,18 +59,18 @@
 }
 
 .contact-list li img {
-    width: 20px;       /* Cố định chiều rộng */
-    height: 20px;      /* Cố định chiều cao */
+    width: 20px;      
+    height: 20px;     
     object-fit: contain;
     
-    /* Dòng bùa chú này giúp biến ảnh icon màu đen nguyên bản thành MÀU CAM ĐẤT */
+   
     filter: invert(56%) sepia(85%) saturate(1636%) hue-rotate(1deg) brightness(98%) contrast(92%);
 }
 
 .bct-logo {
     display: flex;
-    align-items: center; /* Căn giữa theo chiều dọc */
-    gap: 10px; /* Khoảng cách giữa logo và chữ */
+    align-items: center; 
+    gap: 10px; 
     margin-top: 15px;
 }
 
@@ -83,10 +81,10 @@
     font-size: 14px;
     font-weight: bold;
     color: #aaaaaa;
-    text-transform: uppercase; /* Viết hoa chữ */
+    text-transform: uppercase; 
 }
 
-/* Cột 2: Quick Links */
+
 .quick-links ul {
     list-style: none;
     padding: 0;
@@ -106,22 +104,21 @@
 
 .quick-links ul li a:hover {
     color: #d97706;
-    transform: translateX(8px); /* Trượt mũi tên nhẹ khi hover */
+    transform: translateX(8px); 
 }
 
-/* Cột 3: Map */
+
 .map-container iframe {
    
     transition: filter 0.3s;
 }
 
 .map-container iframe:hover {
-    filter: none; /* Hiển thị màu thực khi người dùng di chuột vào bản đồ */
+    filter: none; 
 }
 
-/* DẢI BẢN QUYỀN DƯỚI CÙNG */
 .footer-bottom {
-    background-color: #0a0a0a; /* Đen đậm hơn phần trên */
+    background-color: #0a0a0a; 
     padding: 15px 0;
     border-top: 1px solid #222;
 }
@@ -154,25 +151,23 @@
     background-color: #2a2a2a;
     padding: 6px;
     transition: all 0.3s ease;
-    /* Làm xám trắng logo mạng xã hội ban đầu */
-    /* filter: brightness(0) invert(0.6);  */
+   
 }
 
 .social-links a:hover img {
-    background-color: #d97706; /* Đổi nền cam khi hover */
+    background-color: #d97706;
     width: 42px;
     height: 42px;
-    /* filter: brightness(0) invert(1); Sáng hẳn logo lên */
+  
     transform: translateY(-3px);
 }
 
-/* RESPONSIVE CHO ĐIỆN THOẠI & TABLET */
 @media (max-width: 992px) {
     .footer-main {
         grid-template-columns: 1fr 1fr;
     }
     .footer-col.brand-info {
-        grid-column: 1 / -1; /* Cho cột 1 nằm trọn 1 dòng ngang trên tablet */
+        grid-column: 1 / -1;
     }
 }
 

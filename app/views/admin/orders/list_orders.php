@@ -46,7 +46,7 @@
                                     <td> 
                                         <a href="/admin/don-hang/chi-tiet/' . $od['ma_dh'] . '" class="btn btn-xem">Chi tiết</a>';
 
-                                // Nút Hủy (Không có icon)
+                          
                                 if ($od['trangthai'] != 'huy' && $od['trangthai'] != 'dagiao') {
                                     echo ' <a href="/admin/don-hang/huy/' . $od['ma_dh'] . '" class="btn btn-xoa" onclick="confirmLink(event, \'Bạn có chắc chắn muốn hủy đơn hàng này không?\', this.href);">Hủy</a>';
                                 }

@@ -8,7 +8,7 @@ class AdminPublisherController extends Controller {
         }
     }
 
-    // 1. Hiển thị danh sách NXB
+   
     public function index() {
         $nxbModel = $this->model('NXB');
         $list_nxb = $nxbModel->getAll();
@@ -17,11 +17,11 @@ class AdminPublisherController extends Controller {
             'title' => 'Quản lý Nhà xuất bản',
             'list_nxb' => $list_nxb
         ];
-        // Trỏ tới file view NXB cũ của bạn
+      
         $this->view('admin/nha_xuat_ban/nha_xuat_ban', $data);
     }
 
-    // 2. Thêm NXB mới
+  
     public function store() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['ten_nxb'])) {
             $ten_nxb = trim($_POST['ten_nxb']);
@@ -35,13 +35,13 @@ class AdminPublisherController extends Controller {
         exit;
     }
 
-    // 3. Cập nhật NXB
+
     public function edit($id) {
         $nxbModel = $this->model('NXB');
         $data = [
             'title' => 'Cập nhật Nhà Xuất Bản',
-            'list_nxb' => $nxbModel->getAll(), // Vẫn gọi danh sách để in bảng
-            'nxb_can_sua' => $nxbModel->getByid_nxb($id)[0] ?? null // Lấy thông tin NXB cần sửa
+            'list_nxb' => $nxbModel->getAll(), 
+            'nxb_can_sua' => $nxbModel->getByid_nxb($id)[0] ?? null 
         ];
         
         $this->view('admin/nha_xuat_ban/nha_xuat_ban', $data);
@@ -59,7 +59,6 @@ class AdminPublisherController extends Controller {
         exit;
     }
 
-    // 4. Xóa NXB
     public function delete($id) {
         $nxbModel = $this->model('NXB');
         $nxbModel->del_nxb($id);

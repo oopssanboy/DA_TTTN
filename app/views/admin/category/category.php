@@ -15,7 +15,7 @@
             <h2 class="page-title">Quản Lý Danh Mục</h2>
             
             <?php
-            // KIỂM TRA TRẠNG THÁI "EDIT"
+   
             if(isset($dm_can_sua)) {
             ?>
                 <form action="/admin/danh-muc/sua/<?php echo $dm_can_sua['ma_danhmuc']; ?>" method="POST" class="form-group-inline" onsubmit="confirmForm(event, 'Xác nhận lưu thay đổi?', this);">

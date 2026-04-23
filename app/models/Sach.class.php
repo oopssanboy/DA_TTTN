@@ -4,8 +4,25 @@ class Sach extends DB{
         $sql="select * from product order by ma_sp desc";
         return $this->select($sql);
     }
-    public function getAll_limit8(){
-        $sql="select * from product order by ma_sp desc limit 8";
+    public function getAll_limit8($tab){
+        if($tab === "sachhay"){
+        // Thêm GROUP BY p.ma_sp để lấy danh sách từng cuốn sách
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg 
+                FROM product p 
+                LEFT JOIN reviews r ON r.ma_sp = p.ma_sp 
+                GROUP BY p.ma_sp 
+                ORDER BY sao_avg DESC LIMIT 8";
+    } elseif($tab === "sachbanchay") {
+        // Lấy sách dựa trên số lượng bán được trong bảng order_item
+        $sql = "SELECT p.*, SUM(oi.soluong) as tong_ban 
+                FROM product p 
+                LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
+                GROUP BY p.ma_sp 
+                ORDER BY tong_ban DESC LIMIT 8";
+    } else {
+        $sql = "SELECT * FROM product ORDER BY ma_sp DESC LIMIT 8";
+    }
+        
         return $this->select($sql);
     }
     public function getByid($id)

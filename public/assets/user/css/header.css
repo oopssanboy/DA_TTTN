@@ -1,4 +1,4 @@
-/* ================== TỔNG QUAN HEADER ================== */
+
 body {
     top: 0 !important;
 }
@@ -13,7 +13,6 @@ body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* ================== TẦNG 1: TOP BAR ================== */
 .header-top {
     background-color: #0a0a0a;
     border-bottom: 1px solid #222;
@@ -39,7 +38,7 @@ body {
     margin-right: 5px;
 }
 
-/* Thanh Tìm Kiếm */
+
 .top-search {
     flex-grow: 1;
     max-width: 450px;
@@ -88,7 +87,7 @@ body {
     color: #fff;
 }
 
-/* Các Nút Hành Động (Action) */
+
 .top-actions {
     display: flex;
     align-items: center;
@@ -102,7 +101,7 @@ body {
     font-size: 14px;
 }
 
-/* Dropdown chung cho Ngôn ngữ & Đăng nhập */
+
 .dropdown-menu {
     position: absolute;
     top: calc(100% + 15px);
@@ -120,7 +119,7 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Mũi tên chỉ lên cho menu */
+
 .dropdown-menu::before {
     content: '';
     position: absolute;
@@ -182,11 +181,10 @@ body {
     object-fit: cover;
     border: 2px solid #d97706;
     padding: 2px;
-    /* Nếu avatar gốc là logo đen, filter này chuyển thành sáng */
-    /* filter: brightness(0) invert(0.9);  */
+    
 }
 
-/* Giỏ hàng */
+
 .cart-link {
     position: relative;
     color: #fff;
@@ -215,19 +213,19 @@ body {
     border: 2px solid #0a0a0a;
 }
 
-/* ================== TẦNG 2: MIDDLE (LOGO) ================== */
+
 .header-middle {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 25px 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Hiệu ứng cuộn mượt */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
     overflow: hidden;
-    height: 110px; /* Chiều cao cố định ban đầu */
+    height: 110px; 
 }
 
 .main-logo {
-    max-height: 230px; /* Độ to của Logo shop */
+    max-height: 230px; 
     filter: brightness(0) invert(1); 
     transition: transform 0.3s;
 }
@@ -236,7 +234,7 @@ body {
     transform: scale(1.05);
 }
 
-/* ================== TẦNG 3: BOTTOM (MENU NAV) ================== */
+
 .header-bottom {
     background-color: #1a1a1a;
     border-top: 1px solid #2a2a2a;
@@ -270,7 +268,6 @@ body {
     color: #d97706;
 }
 
-/* Dropdown Menu Danh mục tầng 3 */
 .sub_menu {
     position: absolute;
     top: 100%;
@@ -309,12 +306,11 @@ body {
     padding-left: 25px;
 }
 
-/* ================== HIỆU ỨNG SCROLL (STICKY THÔNG MINH) ================== */
-/* Khi cuộn chuột, class .header-scrolled được add vào .site-header bằng JS */
+
 .site-header.header-scrolled .header-middle {
-    height: 0;          /* Thu nhỏ chiều cao về 0 */
-    padding: 0;         /* Xóa padding */
-    opacity: 0;         /* Làm mờ */
+    height: 0;          
+    padding: 0;        
+    opacity: 0;         
 }
 
 .site-header.header-scrolled {
@@ -324,73 +320,69 @@ body {
     display: none !important;
     visibility: hidden !important;
 }
-/* ================== 4. RESPONSIVE ĐIỆN THOẠI & TABLET ================== */
 @media (max-width: 768px) {
-    /* --- TẦNG 1: TOP BAR --- */
     .top-container {
-        flex-wrap: wrap; /* Cho phép các phần tử rớt dòng */
+        flex-wrap: wrap; 
         gap: 10px;
         padding: 10px 15px;
     }
     
     .top-actions {
         flex-grow: 1;
-        justify-content: flex-end; /* Đẩy cụm icon (ngôn ngữ, avatar, giỏ) sang mép phải */
+        justify-content: flex-end;
     }
     
     .top-search {
-        order: 3; /* Đẩy thanh tìm kiếm xuống hàng thứ 2 */
-        width: 100%; /* Tràn viền 100% màn hình */
+        order: 3; 
+        width: 100%; 
         max-width: 100%;
         margin: 0;
     }
     
-    /* Thu nhỏ nhẹ các icon để đỡ chật */
+   
     .user-avatar { width: 30px; height: 30px; }
     .cart-link { font-size: 20px; }
     
-    /* --- TẦNG 2: LOGO --- */
+    
     .header-middle {
-        height: auto; /* Hủy fix cứng chiều cao của Desktop */
+        height: auto;
         padding: 15px 0;
     }
     
     .main-logo {
-        max-height: 80px; /* Thu nhỏ logo lại cho vừa Mobile */
+        max-height: 80px; 
     }
 
-    /* --- TẦNG 3: MENU (VUỐT NGANG) --- */
     .main-menu {
-        flex-wrap: nowrap; /* Ép không cho rớt dòng */
-        overflow-x: auto; /* Tạo thanh cuộn ngang để vuốt */
+        flex-wrap: nowrap; 
+        overflow-x: auto; 
         justify-content: flex-start;
         padding: 0 15px;
         gap: 20px;
     }
     
-    /* Ẩn thanh cuộn vật lý cho mượt mà, giống app thật */
+  
     .main-menu::-webkit-scrollbar {
         display: none; 
     }
     
     .main-menu > li > a {
-        font-size: 13px; /* Thu nhỏ chữ menu */
+        font-size: 13px; 
         padding: 12px 0;
-        white-space: nowrap; /* Giữ chữ luôn nằm thẳng 1 hàng, không bị bẻ đôi */
+        white-space: nowrap; 
     }
 }
 
-/* Tối ưu thêm cho các màn hình điện thoại cực nhỏ (iPhone SE) */
 @media (max-width: 480px) {
     .top-phone {
-        display: none; /* Ẩn luôn số điện thoại để nhường chỗ cho Avatar & Giỏ hàng */
+        display: none; 
     }
     .top-actions {
         width: 100%;
         justify-content: flex-end;
     }
     .main-logo{
-    max-height: 50px; /* Độ to của Logo shop */
+    max-height: 50px; 
     filter: brightness(0) invert(1); 
     transition: transform 0.3s;
     }

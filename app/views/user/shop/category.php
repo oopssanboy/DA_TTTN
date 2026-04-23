@@ -127,7 +127,7 @@
                 </div>
 
                 <?php 
-                    // Yêu cầu bạn di chuyển file product_mid.php cũ vào app/views/user/shop/product_mid.php
+                   
                     require ROOT_DIR . '/app/views/user/product/product_mid.php'; 
                 ?>
                 

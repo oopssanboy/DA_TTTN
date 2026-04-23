@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/assets/user/css/account.css">
 
 <?php 
-// Lấy avatar từ session, nếu không có thì dùng mặc định
+
 $avatar = isset($_SESSION['user_avatar']) && !empty($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : '/images/logo_user.png';
 ?>
 

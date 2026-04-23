@@ -1,10 +1,8 @@
-/* =======================================================
-   TRANG XÁC THỰC (ĐĂNG NHẬP / ĐĂNG KÝ)
-======================================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&display=swap');
 
 :root {
-    --primary-color: #d97706; /* Cam đất chuẩn E-commerce */
+    --primary-color: #d97706; 
     --primary-hover: #b45f06;
     --text-main: #333333;
     --text-muted: #777777;
@@ -30,14 +28,13 @@ body {
     
 }
 
-/* Căn giữa hộp thoại */
 .auth-wrapper {
     width: 100%;
     max-width: 450px;
     padding: 20px;
 }
 
-/* Khối trắng (Card) */
+
 .auth-card {
     background-color: var(--bg-card);
     border-radius: 12px;
@@ -45,7 +42,6 @@ body {
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
-/* --- HEADER CỦA FORM --- */
 .auth-header {
     text-align: center;
     margin-bottom: 30px;
@@ -79,7 +75,6 @@ body {
     color: var(--text-muted);
 }
 
-/* --- CÁC Ô NHẬP LIỆU --- */
 .input-group {
     margin-bottom: 18px;
 }
@@ -108,7 +103,6 @@ body {
     box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
 }
 
-/* --- TÙY CHỌN BỔ SUNG (Ghi nhớ / Quên mật khẩu) --- */
 .auth-options {
     display: flex;
     justify-content: space-between;
@@ -133,7 +127,7 @@ body {
 }
 .forget-password:hover { text-decoration: underline; }
 
-/* --- NÚT ĐĂNG NHẬP / ĐĂNG KÝ CHÍNH --- */
+
 .btn-auth-submit {
     width: 100%;
     padding: 14px;
@@ -153,7 +147,6 @@ body {
     box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
 }
 
-/* --- DÒNG CHỮ "HOẶC" --- */
 .auth-divider {
     display: flex;
     align-items: center;
@@ -173,7 +166,6 @@ body {
     padding: 0 15px;
 }
 
-/* --- NÚT ĐĂNG NHẬP MẠNG XÃ HỘI --- */
 .social-login-group {
     display: flex;
     justify-content: space-between;
@@ -207,7 +199,6 @@ body {
     height: 20px;
 }
 
-/* --- FOOTER ĐIỀU HƯỚNG --- */
 .auth-footer {
     text-align: center;
     margin-top: 30px;
@@ -225,7 +216,6 @@ body {
     text-decoration: underline;
 }
 
-/* Responsive nhỏ lại cho thiết bị màn hẹp */
 @media (max-width: 480px) {
     .auth-card { padding: 30px 20px; }
     .social-login-group { flex-direction: column; gap: 10px; }

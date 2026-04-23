@@ -1,5 +1,5 @@
 <?php
-// Kế thừa từ class Controller gốc trong thư mục core
+
 class HomeController extends Controller {
     
     public function index() {

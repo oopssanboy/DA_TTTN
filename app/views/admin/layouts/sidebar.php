@@ -1,8 +1,7 @@
 <?php
-// Lấy đường dẫn hiện tại để active menu tương ứng
+
 $current_uri = $_SERVER['REQUEST_URI'];
 
-// Xử lý hiển thị thông tin Admin từ Session (Đồng bộ với AuthController)
 $admin_name = isset($_SESSION['user_info']['ten_kh']) ? $_SESSION['user_info']['ten_kh'] : (isset($_SESSION['admin_info']['username']) ? $_SESSION['admin_info']['username'] : 'Admin');
 $admin_avatar = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : '/assets/user/img/dora.png';
 ?>
@@ -60,6 +59,12 @@ $admin_avatar = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : '/a
         <li>
             <a href="/admin/khuyen-mai" class="<?php echo (strpos($current_uri, '/admin/khuyen-mai') !== false) ? 'active' : ''; ?>">
                 <i class="fa-solid fa-ticket-simple"></i> Quản lý khuyến mãi
+            </a>
+        </li>
+
+        <li>
+            <a href="/admin/danh-gia" class="<?php echo (strpos($current_uri, '/admin/danh-gia') !== false) ? 'active' : ''; ?>">
+                <i class="fa-solid fa-comments"></i> Quản lý đánh giá
             </a>
         </li>
         
