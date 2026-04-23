@@ -32,7 +32,8 @@ class ProductController extends Controller {
             return;
         }
 
-        $related_products = $sachModel->getAll_bycartegory($sp['ma_danhmuc']); 
+        // $related_products = $sachModel->getAll_bycartegory($sp['ma_danhmuc']); 
+        $related_products = $sachModel->getRelatedProducts($sp['ma_danhmuc'], $sp['ma_sp'], 12);
 
         $data = [
             'title' => $sp['tensp'] . ' - Chapter One',

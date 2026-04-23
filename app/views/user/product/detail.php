@@ -2,7 +2,37 @@
 
 <link rel="stylesheet" href="/assets/user/css/product.css">
 <link rel="stylesheet" href="/assets/user/css/category.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <style>
+        .relatedProductSwiper { width: 100%; overflow: hidden; padding-bottom: 20px; position: relative; }
+        .relatedProductSwiper .swiper-wrapper { display: flex; }
+        .relatedProductSwiper .swiper-slide { height: auto; }
+        .relatedProductSwiper .product-item { height: 100%; margin: 0; }
+        
+        /* Custom CSS cho 2 nút mũi tên Swiper */
+        .relatedProductSwiper .swiper-button-next,
+        .relatedProductSwiper .swiper-button-prev {
+            color: var(--primary-color, #d97706); 
+            background-color: rgb(253, 253, 253);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        .relatedProductSwiper .swiper-button-next:hover,
+        .relatedProductSwiper .swiper-button-prev:hover {
+            background-color: var(--primary-color, #d97706);
+            color: #ffffff;
+        }
+      
+        .relatedProductSwiper .swiper-button-next::after,
+        .relatedProductSwiper .swiper-button-prev::after {
+            font-size: 20px;
+            font-weight: 900;
+        }
+    </style>
 <main class="container-main product-page">
     <div class="breadcrumb">
         <a href="/">Trang chủ</a> <span>/</span>
@@ -199,62 +229,65 @@
         </div>
     </div>
 
-    <div class="related-products-section">
-            <div class="section-title-wrap">
-                <h2 class="section-title">Sản phẩm cùng danh mục</h2>
-            </div>
-            
-            <div class="cartegory_right_content">
+   
+    
+    
+
+    <div class="related-products-section" style="margin-top: 50px;">
+        <div class="section-title-wrap">
+            <h2 class="section-title">Sản phẩm cùng danh mục</h2>
+        </div>
+        
+        <div class="swiper relatedProductSwiper">
+            <div class="swiper-wrapper">
                 <?php
                     $list_product = $related_products;
 
-                    if (!empty($list_product) && count($list_product) > 1):
+                    if (!empty($list_product) && count($list_product) > 0):
                         foreach ($list_product as $rel_sp):
-                            if($rel_sp['ma_sp'] != $sp['ma_sp']):
                             $gia_ban = $rel_sp['giasp'];
                             $gia_goc = $gia_ban * 1.25; 
                             $phan_tram_giam = round((($gia_goc - $gia_ban) / $gia_goc) * 100);
                 ?>
-                    <div class="product-item">
-                        <a href="/san-pham/chi-tiet/<?php echo $rel_sp['ma_sp']; ?>" class="product-link">
-                            
-                            <div class="discount-badge">-<?php echo $phan_tram_giam; ?>%</div>
-                            
-                            <div class="product_img">
-                                <img src="/uploads/books/<?php echo $rel_sp['link_hinhanh']; ?>" alt="<?php echo $rel_sp['tensp']; ?>">
-                            </div>
-                            
-                            <h3 class="product-name"><?php echo $rel_sp['tensp']; ?></h3>
-                            
-                            <div class="product-price-box">
-                                <span class="old-price"><?php echo number_format($gia_goc); ?> ₫</span>
-                                <span class="new-price"><?php echo number_format($gia_ban); ?> ₫</span>
-                            </div>
-                            
-                            <button class="btn-buy-now">Mua ngay</button>
-                        </a>
+                    <div class="swiper-slide">
+                        <div class="product-item">
+                            <a href="/san-pham/chi-tiet/<?php echo $rel_sp['ma_sp']; ?>" class="product-link">
+                                <div class="discount-badge">-<?php echo $phan_tram_giam; ?>%</div>
+                                <div class="product_img">
+                                    <img src="/uploads/books/<?php echo $rel_sp['link_hinhanh']; ?>" alt="<?php echo htmlspecialchars($rel_sp['tensp']); ?>">
+                                </div>
+                                <h3 class="product-name"><?php echo htmlspecialchars($rel_sp['tensp']); ?></h3>
+                                <div class="product-price-box">
+                                    <span class="old-price"><?php echo number_format($gia_goc); ?> ₫</span>
+                                    <span class="new-price"><?php echo number_format($gia_ban); ?> ₫</span>
+                                </div>
+                                <button type="button" class="btn-buy-now" style="width: 100%;">MUA NGAY</button>
+                            </a>
+                        </div>
                     </div>
                 <?php
-                        endif;
                         endforeach;
                     else:
                 ?>
-                    <p class="empty-product">Không có sản phẩm nào để hiển thị.</p>
+                    <div class="swiper-slide"><p class="empty-product">Không có sản phẩm nào cùng danh mục.</p></div>
                 <?php
                     endif; 
                 ?>
             </div>
+            
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
-
+    </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    
     function changeImage(element, imageSrc) {
         document.getElementById('mainProductImage').src = imageSrc;
         var thumbs = document.querySelectorAll('.thumb-item');
-        thumbs.forEach(function(thumb) {
-            thumb.classList.remove('active');
-        });
+        thumbs.forEach(function(thumb) { thumb.classList.remove('active'); });
         element.classList.add('active');
     }
 
@@ -264,14 +297,11 @@
     }
     function decreaseQty() {
         var input = document.getElementById('qtyInput');
-        if(parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
+        if(parseInt(input.value) > 1) { input.value = parseInt(input.value) - 1; }
     }
+
    
     let isReviewsExpanded = false;
-
-
     function toggleReviews() {
         var hiddenReviews = document.querySelectorAll('.hidden-review');
         var btn = document.getElementById('btnToggleReviews');
@@ -280,28 +310,40 @@
         var totalReviews = btn.getAttribute('data-total'); 
 
         if (!isReviewsExpanded) {
-          
-            hiddenReviews.forEach(function(rev) {
-                rev.style.display = ''; 
-            });
+            hiddenReviews.forEach(function(rev) { rev.style.display = ''; });
             btnText.innerText = 'Ẩn bớt đánh giá';
             btnIcon.classList.remove('fa-chevron-down');
             btnIcon.classList.add('fa-chevron-up'); 
             isReviewsExpanded = true;
         } else {
-    
-            hiddenReviews.forEach(function(rev) {
-                rev.style.display = 'none'; 
-            });
+            hiddenReviews.forEach(function(rev) { rev.style.display = 'none'; });
             btnText.innerText = 'Xem tất cả ' + totalReviews + ' đánh giá';
             btnIcon.classList.remove('fa-chevron-up');
             btnIcon.classList.add('fa-chevron-down'); 
             isReviewsExpanded = false;
-            
-           
             document.querySelector('.product-reviews-section').scrollIntoView({ behavior: 'smooth' });
         }
     }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var swiper = new Swiper(".relatedProductSwiper", {
+            slidesPerView: 2, 
+            spaceBetween: 15, 
+            grabCursor: true, 
+            
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            
+            breakpoints: {
+                640: { slidesPerView: 3, spaceBetween: 20 },
+                1024: { slidesPerView: 4, spaceBetween: 25 },
+                1200: { slidesPerView: 5, spaceBetween: 30 }
+            }
+        });
+    });
 </script>
 
 <?php require ROOT_DIR . '/app/views/user/layouts/footer.php'; ?>

@@ -22,6 +22,7 @@
                     <?php } ?>
 
                     <input type="hidden" name="sap_xep" id="hiddenSort" value="<?php echo $sap_xep; ?>">
+                    <input type="hidden" name="khoang_gia" id="hiddenPrice" value="<?php echo $khoang_gia ?? ''; ?>">
                     
                     <?php if ($keyword != '') { ?>
                         <input type="hidden" name="keyword" value="<?php echo htmlspecialchars($keyword); ?>">
@@ -113,34 +114,76 @@
             </div>
 
             <div class="cartegory_right">
-                <div class="row">
+                <div class="row" style="align-items: center; justify-content: space-between;">
                     <div class="cartegory_right_top_item">
                         <p><?php echo $c; ?></p>
                     </div>
-                    <div class="cartegory_right_top_item">
-                        <select onchange="updateSortAndSubmit(this.value)">
+                    
+                    <div class="cartegory_right_top_item" style="display: flex; gap: 15px;">
+                        
+                        <select onchange="updatePriceAndSubmit(this.value)" style="padding: 5px 10px; border: 1px solid #ddd; outline: none; border-radius: 4px; cursor: pointer;">
+                            <option value="">Tất cả mức giá</option>
+                            <option value="duoi_100" <?php if (($khoang_gia ?? '') == 'duoi_100') echo 'selected'; ?>>Dưới 100.000₫</option>
+                            <option value="100_300" <?php if (($khoang_gia ?? '') == '100_300') echo 'selected'; ?>>100.000₫ - 300.000₫</option>
+                            <option value="tren_300" <?php if (($khoang_gia ?? '') == 'tren_300') echo 'selected'; ?>>Trên 300.000₫</option>
+                        </select>
+
+                        <select onchange="updateSortAndSubmit(this.value)" style="padding: 5px 10px; border: 1px solid #ddd; outline: none; border-radius: 4px; cursor: pointer;">
                             <option value="">Sắp xếp mặc định</option>
+                            <option value="ban_chay" <?php if ($sap_xep == 'ban_chay') echo 'selected'; ?>>Bán chạy nhất</option>
+                            <option value="danh_gia_cao" <?php if ($sap_xep == 'danh_gia_cao') echo 'selected'; ?>>Đánh giá cao nhất</option>
                             <option value="gia_giam" <?php if ($sap_xep == 'gia_giam') echo 'selected'; ?>>Giá cao đến thấp</option>
                             <option value="gia_tang" <?php if ($sap_xep == 'gia_tang') echo 'selected'; ?>>Giá thấp đến cao</option>
                         </select>
+                        
                     </div>
                 </div>
 
                 <?php 
-                   
-                    require ROOT_DIR . '/app/views/user/product/product_mid.php'; 
+                   $so_luong_hien_thi = isset($list_product) ? count($list_product) : 0;
+                   require ROOT_DIR . '/app/views/user/product/product_mid.php'; 
                 ?>
                 
+                <div class="cartegory_right_bottom row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                    <div class="cartegory_right_bottom_item">
+                        <p>Hiển thị <strong><?= $so_luong_hien_thi ?></strong> / <strong><?= $total_products ?></strong> sản phẩm</p>
+                    </div>
+                    
+                    <?php if (isset($total_pages) && $total_pages > 1): ?>
+                        <div class="cartegory_right_bottom_item">
+                            <ul class="pagination" style="display: inline-flex; list-style: none; padding: 0; gap: 8px;">
+                                <?php 
+                                    function buildPageUrl($pageNum) {
+                                        $params = $_GET;
+                                        $params['page'] = $pageNum;
+                                        return '?' . http_build_query($params);
+                                    }
+                                ?>
+
+                                <?php if ($current_page > 1): ?>
+                                    <li>
+                                        <a href="<?= buildPageUrl($current_page - 1) ?>" style="padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px;">&#171;</a>
+                                    </li>
+                                <?php endif; ?>
+
+                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li>
+                                        <a href="<?= buildPageUrl($i) ?>" style="padding: 8px 16px; border: 1px solid #ddd; text-decoration: none; border-radius: 4px; <?= ($i == $current_page) ? 'background-color: var(--primary-color, #d97706); color: white; border-color: var(--primary-color, #d97706);' : 'color: #333;' ?>">
+                                            <?= $i ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <?php if ($current_page < $total_pages): ?>
+                                    <li>
+                                        <a href="<?= buildPageUrl($current_page + 1) ?>" style="padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px;">&#187;</a>
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="cartegory_right_bottom row">
-        <div class="cartegory_right_bottom_item">
-            <p>Hiển thị danh sách Sản phẩm </p>
-        </div>
-        <div class="cartegory_right_bottom_item">
-            <p><span>&#171;</span> 1 2 3 4 5 <span>&#187;</span> Trang cuối</p>
         </div>
     </div>
 </div>
@@ -148,8 +191,15 @@
 <?php require ROOT_DIR . '/app/views/user/layouts/footer.php'; ?>
 
 <script>
+    // Hàm cập nhật Sắp xếp
     function updateSortAndSubmit(sortValue) {
         document.getElementById('hiddenSort').value = sortValue;
+        document.getElementById('mainFilterForm').submit();
+    }
+
+    // Hàm cập nhật Lọc Giá
+    function updatePriceAndSubmit(priceValue) {
+        document.getElementById('hiddenPrice').value = priceValue;
         document.getElementById('mainFilterForm').submit();
     }
 </script>

@@ -32,7 +32,7 @@
     <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">Sách mới tuyển chọn</h2>
-            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/danh-muc" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
             
@@ -45,7 +45,7 @@
     <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">Khuyến mãi - Giảm đến 25%</h2>
-            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/danh-muc?sap_xep=gia_tang" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
             <?php 
@@ -65,7 +65,7 @@
     <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">Bán tốt nhất</h2>
-            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/danh-muc?sap_xep=ban_chay" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
             <?php 
@@ -86,7 +86,7 @@
 <section class="home-section">
         <div class="section-title-wrap">
             <h2 class="section-title">TUYỂN TẬP CUỐN SÁCH HAY</h2>
-            <a href="/" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
+            <a href="/danh-muc?sap_xep=danh_gia_cao" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
             
