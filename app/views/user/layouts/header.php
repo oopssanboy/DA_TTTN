@@ -121,9 +121,13 @@
     <script>
         window.addEventListener('scroll', function() {
             var header = document.getElementById('myHeader');
-            if (window.scrollY > 20) {
+            var currentScroll = window.scrollY || document.documentElement.scrollTop;
+           
+            if (currentScroll > 110) {
                 header.classList.add('header-scrolled');
-            } else {
+            } 
+          
+            else if (currentScroll < 20) {
                 header.classList.remove('header-scrolled');
             }
         });

@@ -219,9 +219,9 @@ body {
     justify-content: center;
     align-items: center;
     padding: 25px 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    max-height: 110px; /* Đặt max-height để làm hiệu ứng cuộn rèm */
+    transition: all 0.4s ease-in-out; 
     overflow: hidden;
-    height: 110px; 
 }
 
 .main-logo {
@@ -238,6 +238,7 @@ body {
 .header-bottom {
     background-color: #1a1a1a;
     border-top: 1px solid #2a2a2a;
+    /* transition: background-color 0.3s; */
 }
 
 .main-menu {
@@ -306,12 +307,12 @@ body {
     padding-left: 25px;
 }
 
-
 .site-header.header-scrolled .header-middle {
-    height: 0;          
+    max-height: 0;          
     padding: 0;        
-    opacity: 0;         
+    opacity: 0; 
 }
+
 
 .site-header.header-scrolled {
     box-shadow: 0 5px 20px rgba(0,0,0,0.6);

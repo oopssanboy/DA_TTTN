@@ -121,14 +121,14 @@
                     
                     <div class="cartegory_right_top_item" style="display: flex; gap: 15px;">
                         
-                        <select onchange="updatePriceAndSubmit(this.value)" style="padding: 5px 10px; border: 1px solid #ddd; outline: none; border-radius: 4px; cursor: pointer;">
+                        <select onchange="updatePriceAndSubmit(this.value)" style="padding: 10px 15px; margin-right: 10px; border: 1px solid #ddd; outline: none; border-radius: 4px; cursor: pointer;">
                             <option value="">Tất cả mức giá</option>
                             <option value="duoi_100" <?php if (($khoang_gia ?? '') == 'duoi_100') echo 'selected'; ?>>Dưới 100.000₫</option>
                             <option value="100_300" <?php if (($khoang_gia ?? '') == '100_300') echo 'selected'; ?>>100.000₫ - 300.000₫</option>
                             <option value="tren_300" <?php if (($khoang_gia ?? '') == 'tren_300') echo 'selected'; ?>>Trên 300.000₫</option>
                         </select>
 
-                        <select onchange="updateSortAndSubmit(this.value)" style="padding: 5px 10px; border: 1px solid #ddd; outline: none; border-radius: 4px; cursor: pointer;">
+                        <select onchange="updateSortAndSubmit(this.value)" style="padding: 10px 15px; margin-right: 20px; border: 1px solid #ddd; outline: none; border-radius: 4px; cursor: pointer;">
                             <option value="">Sắp xếp mặc định</option>
                             <option value="ban_chay" <?php if ($sap_xep == 'ban_chay') echo 'selected'; ?>>Bán chạy nhất</option>
                             <option value="danh_gia_cao" <?php if ($sap_xep == 'danh_gia_cao') echo 'selected'; ?>>Đánh giá cao nhất</option>

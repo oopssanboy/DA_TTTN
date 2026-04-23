@@ -5,23 +5,24 @@ class Sach extends DB{
         return $this->select($sql);
     }
     public function getAll_limit8($tab){
-        if($tab === "sachhay"){
-        // Thêm GROUP BY p.ma_sp để lấy danh sách từng cuốn sách
-        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg 
-                FROM product p 
-                LEFT JOIN reviews r ON r.ma_sp = p.ma_sp 
-                GROUP BY p.ma_sp 
-                ORDER BY sao_avg DESC LIMIT 8";
-    } elseif($tab === "sachbanchay") {
-        // Lấy sách dựa trên số lượng bán được trong bảng order_item
-        $sql = "SELECT p.*, SUM(oi.soluong) as tong_ban 
-                FROM product p 
-                LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
-                GROUP BY p.ma_sp 
-                ORDER BY tong_ban DESC LIMIT 8";
-    } else {
-        $sql = "SELECT * FROM product ORDER BY ma_sp DESC LIMIT 8";
-    }
+        // Luôn nối với bảng reviews để lấy sao_avg
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                GROUP BY p.ma_sp ";
+
+        if ($tab === "sachhay") {
+            $sql .= " ORDER BY sao_avg DESC LIMIT 8";
+        } elseif ($tab === "sachbanchay") {
+            // Thay bảng order_item bằng tên thật trong CSDL của bạn nếu khác
+            $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
+                    FROM product p 
+                    LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                    LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
+                    GROUP BY p.ma_sp 
+                    ORDER BY tong_ban DESC LIMIT 8";
+        } else {
+            $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
+        }
         
         return $this->select($sql);
     }
@@ -36,10 +37,14 @@ class Sach extends DB{
     }
     // Lấy tối đa 8 sản phẩm cùng danh mục (Loại trừ cuốn sách đang xem)
     public function getRelatedProducts($ma_danhmuc, $ma_sp_hien_tai, $limit) {
-        $sql = "SELECT * FROM product 
-                WHERE ma_danhmuc = ? AND ma_sp != ? 
-                ORDER BY ma_sp DESC 
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg 
+                FROM product p 
+                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                WHERE p.ma_danhmuc = ? AND p.ma_sp != ? 
+                GROUP BY p.ma_sp 
+                ORDER BY p.ma_sp DESC 
                 LIMIT " . (int)$limit;
+                
         return $this->select($sql, [$ma_danhmuc, $ma_sp_hien_tai]);
     }
     public function getAll_by_phanloai($phan_loai){
@@ -176,20 +181,19 @@ class Sach extends DB{
 
     // 2. Hàm lấy danh sách sản phẩm
     public function loc_san_pham($ma_danhmuc, $phan_loai, $sap_xep, $nxb, $chat_lieu, $phien_ban, $keyword, $limit = 12, $offset = 0, $gia_min = 0, $gia_max = 0) {
-        $select_clause = "DISTINCT p.*";
-        if ($sap_xep == 'danh_gia_cao') $select_clause .= ", AVG(r.sosao) as sao_avg";
+        $select_clause = "DISTINCT p.*, AVG(r.sosao) as sao_avg";
         if ($sap_xep == 'ban_chay') $select_clause .= ", SUM(oi.soluong) as tong_ban";
 
         $sql = "SELECT $select_clause FROM product p ";
+        
+        // LUÔN LUÔN JOIN BẢNG REVIEWS
+        $sql .= " LEFT JOIN reviews r ON p.ma_sp = r.ma_sp ";
         
         if (!empty($chat_lieu) || !empty($phien_ban)) {
             $sql .= " JOIN dacdiem_sp d ON p.ma_sp = d.ma_sp ";
         }
         if ($sap_xep == 'ban_chay') {
             $sql .= " LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp ";
-        }
-        if ($sap_xep == 'danh_gia_cao') {
-            $sql .= " LEFT JOIN reviews r ON p.ma_sp = r.ma_sp ";
         }
 
         $sql .= " WHERE 1=1";
