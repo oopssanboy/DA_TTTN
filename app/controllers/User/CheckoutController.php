@@ -17,9 +17,27 @@ class CheckoutController extends Controller
             exit;
         }
 
+        $tongtien = $_SESSION['user_order'][1];
+        
+        $bank_id = 'Vietcombank'; 
+        $account_no = '1017725187'; 
+        $account_name = 'HUYNH NGOC QUAN'; 
+        
+       
+        $ma_kh = $_SESSION['user_order'][0];
+        $temp_order_id = "KH" . $ma_kh . "T" . time(); 
+        $description = 'THANH TOAN ' . $temp_order_id; 
+
+        $qr_url = "https://img.vietqr.io/image/{$bank_id}-{$account_no}-compact2.png?amount={$tongtien}&addInfo=" . urlencode($description) . "&accountName=" . urlencode($account_name);
+
         $data = [
             'title' => 'Thanh toán chuyển khoản - Chapter One',
-            'tongtien' => $_SESSION['user_order'][1]
+            'tongtien' => $tongtien,
+            'qr_url' => $qr_url, 
+            'account_no' => $account_no,
+            'bank_id' => $bank_id,
+            'account_name' => $account_name,
+            'description' => $description
         ];
 
         $this->view('user/checkout/index', $data); 

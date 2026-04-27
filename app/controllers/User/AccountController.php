@@ -117,5 +117,38 @@ class AccountController extends Controller {
         header('Location: /tai-khoan?tab=xem_donhang');
         exit;
     }
+    public function doiAvatar() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['avatar_file'])) {
+            
+            if (!isset($_SESSION['user_login'])) {
+                header('Location: /dang-nhap');
+                exit;
+            }
+            require_once ROOT_DIR . '/app/helpers/UploadHelper.php';
+            $ma_kh = $_SESSION['user_info']['ma_kh'];
+
+          
+            $uploadResult = UploadHelper::uploadImage($_FILES['avatar_file'], 'avatars');
+
+            if ($uploadResult['success'] === true) {
+                
+                $userModel = $this->model('User'); 
+                $avatar_path = $uploadResult['path']; 
+               
+                $userModel->update_avatar($avatar_path, $ma_kh);
+
+                $_SESSION['user_avatar'] = $avatar_path;
+                $_SESSION['user_avatar'] = URLROOT . '/uploads/avatars/' . $avatar_path;
+                $_SESSION['flash_alert'] = ['title' => 'Thành công', 'text' => 'Cập nhật ảnh đại diện thành công!', 'icon' => 'success'];
+                
+            } else {
+             
+                $_SESSION['flash_alert'] = ['title' => 'Lỗi', 'text' => $uploadResult['message'], 'icon' => 'error'];
+            }
+
+            header("Location: /tai-khoan");
+            exit;
+        }
+    }
 }
 ?>

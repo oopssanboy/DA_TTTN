@@ -116,7 +116,10 @@ $router->setBasePath('/');
     $controller = new AccountController();
     $controller->updateInfo();
 });
-
+    $router->post('/doi-avatar', function() {
+    $controller = new AccountController(); 
+    $controller->doiAvatar();
+});
 
     $router->post('/tai-khoan/doi-mat-khau', function () {
     $controller = new AccountController();
@@ -152,6 +155,8 @@ $router->mount('/admin', function () use ($router) {
         $controller = new DashboardController();
         $controller->index();
     });
+
+    
 
     $router->get('/danh-muc', function () {
         (new AdminCategoryController())->index(); });

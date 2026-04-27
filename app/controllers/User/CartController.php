@@ -168,27 +168,59 @@ class CartController extends Controller {
 
             if ($flag > 0) {
                 if ($phuongthuc_thanhtoan == 'ttknh') {
-                    // COD
+                  
                     $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $_SESSION['user_order'][4], $_SESSION['user_order'][5], $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
+                    
                     foreach ($list_cart as $item) {
                         $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $item['giasp'], $item['phien_ban']);
                         $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
                     }
 
+                
+                    $email_kh = $_SESSION['user_info']['email'] ?? ($_SESSION['user_info'][0]['email'] ?? '');
+                    $ten_kh = $_SESSION['user_info']['ten_kh'] ?? ($_SESSION['user_info'][0]['ten_kh'] ?? 'Quý khách');
+                    $tongtien_fm = number_format($_SESSION['user_order'][1]) . ' ₫';
+
+                    if (!empty($email_kh)) {
+                        require_once ROOT_DIR . '/app/helpers/Mailer.php';
+                        $subject = "Xác nhận đơn hàng #{$ma_dh} - Chapter One";
+                        $content = "
+                        <div style='font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; background-color: #f4f5f7; color: #333;'>
+                            <div style='max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; border-top: 5px solid #d97706; box-shadow: 0 4px 10px rgba(0,0,0,0.05);'>
+                                <h2 style='color: #d97706; text-align: center; margin-bottom: 20px;'>ĐẶT HÀNG THÀNH CÔNG</h2>
+                                <p>Xin chào <strong>{$ten_kh}</strong>,</p>
+                                <p>Cảm ơn bạn đã tin tưởng và mua sách tại <strong>Chapter One</strong>. Đơn hàng của bạn đã được ghi nhận với phương thức <strong>Thanh toán khi nhận hàng (COD)</strong>.</p>
+                                
+                                <div style='background: #fafafa; padding: 20px; border-radius: 5px; margin: 25px 0; border: 1px solid #eee;'>
+                                    <h3 style='margin-top: 0; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 10px;'>Thông tin đơn hàng</h3>
+                                    <p style='margin: 10px 0;'><strong>Mã đơn hàng:</strong> <span style='color: #d97706; font-weight: bold;'>#{$ma_dh}</span></p>
+                                    <p style='margin: 10px 0;'><strong>Phương thức thanh toán:</strong> Thanh toán khi nhận hàng (COD)</p>
+                                    <p style='margin: 10px 0; font-size: 16px;'><strong>Tổng thanh toán:</strong> <span style='color: #d0011b; font-weight: bold;'>{$tongtien_fm}</span></p>
+                                </div>
+                                
+                                <p>Chúng tôi sẽ chuẩn bị hàng và giao đến bạn trong thời gian sớm nhất.</p>
+                                <p style='margin-top: 30px;'>Trân trọng,<br><strong style='color: #d97706;'>Đội ngũ Chapter One</strong></p>
+                            </div>
+                        </div>";
+                        Mailer::sendMail($email_kh, $subject, $content);
+                    }
+                    
                     $cart->del_byid_kh($ma_kh);
                     $_SESSION['user_cart']['count'] = 0;
                     unset($_SESSION['user_order']);
+                    
                     $_SESSION['flash_alert'] = [
                         'title' => 'Thành công!', 'text' => 'Bạn đã đặt hàng thành công.', 'icon' => 'success'
                     ];
                     header("Location: /gio-hang");
                     exit;
+                    
                 } else if ($phuongthuc_thanhtoan == 'bank') {
                    
                     header("Location: /thanh-toan-qr");
                     exit;
                 } else if ($phuongthuc_thanhtoan == 'momo') {
-                //  MoMo 
+                
                 header("Location: /thanh-toan-momo");
                 exit;
                 }
