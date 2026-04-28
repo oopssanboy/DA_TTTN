@@ -94,8 +94,8 @@
                             </div>
                             <p style="font-size: 12px; color: var(--text-muted); text-align: right; margin-top: 5px;">(Đã bao gồm VAT nếu có)</p>
                             <form action="/ap-dung-ma" method="POST" style="display: flex; gap: 10px; margin-top: 20px;">
-    <input type="text" name="ma_code" placeholder="Nhập mã giảm giá..." required 
-           style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
+    <input type="text" name="ma_code" placeholder="   Nhập mã giảm giá..." required 
+           style="border: 1px solid #ddd; border-radius: 4px; flex: 1;">
     <button type="submit" class="btn-primary">Áp dụng</button>
 </form>
 
