@@ -4,36 +4,51 @@ class Sach extends DB{
         $sql="select * from product order by ma_sp desc";
         return $this->select($sql);
     }
-    public function getAll_limit8($tab){
-    // 1. Khởi tạo SQL chung (Sách mới / Sách hay)
-    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
-            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-            GROUP BY p.ma_sp ";
+    public function getAll_limit8($tab) {
+    // Lấy thời gian hiện tại
+    $now = date('Y-m-d H:i:s');
 
-    if ($tab === "sachhay") {
-        $sql .= " ORDER BY sao_avg DESC LIMIT 8";
-    } elseif ($tab === "sachbanchay") {
-        // Dùng y hệt câu SQL bạn nói là đã chạy được trên host
-        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
-                FROM product p 
-                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
-                GROUP BY p.ma_sp 
-                ORDER BY tong_ban DESC LIMIT 8";
-    } elseif ($tab === "khuyenmai") {
-        // SỬA THEO ẢNH image_3ea1fd.png: bảng product_discount, cột ma_sp
-        $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
-                FROM product p 
-                INNER JOIN product_discounts d ON p.ma_sp = d.product_id 
-                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                WHERE d.status = 1 AND NOW() BETWEEN d.start_date AND d.end_date 
-                GROUP BY p.ma_sp 
-                ORDER BY d.discount_percent DESC LIMIT 8";
-    } else {
-        // Tab mặc định (else)
-        $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
+    // 1. Trường hợp tab KHUYẾN MÃI
+    if ($tab === "khuyenmai") {
+        $sql = "SELECT p.*, 
+                (SELECT d.discount_percent FROM product_discounts d 
+                 WHERE d.product_id = p.ma_sp AND d.status = 1 
+                 AND '$now' BETWEEN d.start_date AND d.end_date 
+                 LIMIT 1) as discount_percent,
+                (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
+                FROM product p
+                WHERE (SELECT COUNT(*) FROM product_discounts d 
+                       WHERE d.product_id = p.ma_sp AND d.status = 1 
+                       AND '$now' BETWEEN d.start_date AND d.end_date) > 0
+                ORDER BY discount_percent DESC LIMIT 8";
+        return $this->select($sql);
     }
-    
+
+    // 2. Trường hợp tab BÁN CHẠY
+    if ($tab === "sachbanchay") {
+        $sql = "SELECT p.*, 
+                (SELECT SUM(oi.soluong) FROM order_item oi WHERE oi.ma_sp = p.ma_sp) as tong_ban,
+                (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
+                FROM product p
+                ORDER BY tong_ban DESC LIMIT 8";
+        return $this->select($sql);
+    }
+
+    // 3. Trường hợp tab SÁCH HAY (Đánh giá cao)
+    if ($tab === "sachhay") {
+        $sql = "SELECT p.*, 
+                (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
+                FROM product p
+                ORDER BY sao_avg DESC LIMIT 8";
+        return $this->select($sql);
+    }
+
+    // 4. MẶC ĐỊNH (Sách mới nhất)
+    $sql = "SELECT p.*, 
+            (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
+            FROM product p
+            ORDER BY p.ma_sp DESC LIMIT 8";
+            
     return $this->select($sql);
 }
     public function getByid($id)
