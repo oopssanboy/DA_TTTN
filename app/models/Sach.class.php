@@ -4,40 +4,49 @@ class Sach extends DB{
         $sql="select * from product order by ma_sp desc";
         return $this->select($sql);
     }
-    public function getAll_limit8($tab){
-    $now = date('Y-m-d H:i:s'); // Lấy thời gian hiện tại để check Flash Sale
+    public function getAll_limit8($tab) {
+    // Lấy thời gian hiện tại từ PHP để tránh lệch múi giờ trên Server Host
+    $now = date('Y-m-d H:i:s');
 
-    // 1. TRƯỜNG HỢP KHUYẾN MÃI (Sửa theo ảnh image_3ea1fd.png)
+    // 1. Trường hợp tab KHUYẾN MÃI (Dựa trên ảnh image_3ea1fd.png)
     if ($tab === "khuyenmai") {
         // JOIN bảng product_discount (số ít) qua cột ma_sp
+        // Chú ý: GROUP BY phải bao gồm cả d.discount_percent để không lỗi trên Host
         $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
                 FROM product p 
                 INNER JOIN product_discounts d ON p.ma_sp = d.product_id 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
                 WHERE d.status = 1 AND ? BETWEEN d.start_date AND d.end_date 
-                GROUP BY p.ma_sp 
+                GROUP BY p.ma_sp, d.discount_percent
                 ORDER BY d.discount_percent DESC LIMIT 8";
         return $this->select($sql, [$now]);
     }
 
-    // 2. CÁC TRƯỜNG HỢP CÒN LẠI (Sách hay, Bán chạy, Mới nhất)
-    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
-            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-            GROUP BY p.ma_sp ";
-
-    if ($tab === "sachhay") {
-        $sql .= " ORDER BY sao_avg DESC LIMIT 8";
-    } elseif ($tab === "sachbanchay") {
-        // Dùng bảng order_item (số ít) theo ảnh image_3ea1df.png
+    // 2. Trường hợp tab BÁN CHẠY (Dựa trên ảnh image_3ea1df.png)
+    if ($tab === "sachbanchay") {
         $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(IFNULL(oi.soluong, 0)) as tong_ban 
                 FROM product p 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
                 LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
                 GROUP BY p.ma_sp 
                 ORDER BY tong_ban DESC LIMIT 8";
-    } else {
-        $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
+        return $this->select($sql);
     }
+
+    // 3. Trường hợp tab SÁCH HAY (Sắp xếp theo số sao trung bình)
+    if ($tab === "sachhay") {
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                GROUP BY p.ma_sp 
+                ORDER BY sao_avg DESC LIMIT 8";
+        return $this->select($sql);
+    }
+
+    // 4. TRƯỜNG HỢP MẶC ĐỊNH (Sách mới nhất)
+    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+            GROUP BY p.ma_sp 
+            ORDER BY p.ma_sp DESC LIMIT 8";
     
     return $this->select($sql);
 }
