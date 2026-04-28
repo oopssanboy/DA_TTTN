@@ -4,54 +4,40 @@ class Sach extends DB{
         $sql="select * from product order by ma_sp desc";
         return $this->select($sql);
     }
-    public function getAll_limit8($tab) {
-    $now = date('Y-m-d H:i:s'); // Lấy giờ hệ thống chính xác
+    public function getAll_limit8($tab){
+    $now = date('Y-m-d H:i:s'); // Lấy thời gian hiện tại để check Flash Sale
 
-    // 1. TRƯỜNG HỢP: KHUYẾN MÃI (Flash Sale)
+    // 1. TRƯỜNG HỢP KHUYẾN MÃI (Sửa theo ảnh image_3ea1fd.png)
     if ($tab === "khuyenmai") {
-        // Lưu ý: Kiểm tra chính xác tên bảng là 'product_discount' hay 'product_discounts'
-        // Ở đây mình dùng 'product_discount' và join qua cột 'ma_sp' theo chuẩn của bạn
-        $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
-                       d.discount_percent, AVG(r.sosao) as sao_avg 
+        // JOIN bảng product_discount (số ít) qua cột ma_sp
+        $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
                 FROM product p 
                 INNER JOIN product_discounts d ON p.ma_sp = d.product_id 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
                 WHERE d.status = 1 AND ? BETWEEN d.start_date AND d.end_date 
-                GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, d.discount_percent
+                GROUP BY p.ma_sp 
                 ORDER BY d.discount_percent DESC LIMIT 8";
         return $this->select($sql, [$now]);
     }
 
-    // 2. TRƯỜNG HỢP: BÁN CHẠY
-    if ($tab === "sachbanchay") {
-        $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
-                       AVG(r.sosao) as sao_avg, SUM(IFNULL(oi.soluong, 0)) as tong_ban 
+    // 2. CÁC TRƯỜNG HỢP CÒN LẠI (Sách hay, Bán chạy, Mới nhất)
+    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+            GROUP BY p.ma_sp ";
+
+    if ($tab === "sachhay") {
+        $sql .= " ORDER BY sao_avg DESC LIMIT 8";
+    } elseif ($tab === "sachbanchay") {
+        // Dùng bảng order_item (số ít) theo ảnh image_3ea1df.png
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(IFNULL(oi.soluong, 0)) as tong_ban 
                 FROM product p 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
                 LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
-                GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc
+                GROUP BY p.ma_sp 
                 ORDER BY tong_ban DESC LIMIT 8";
-        return $this->select($sql);
+    } else {
+        $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
     }
-
-    // 3. TRƯỜNG HỢP: SÁCH HAY (Đánh giá cao)
-    if ($tab === "sachhay") {
-        $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
-                       AVG(r.sosao) as sao_avg 
-                FROM product p 
-                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc
-                ORDER BY sao_avg DESC LIMIT 8";
-        return $this->select($sql);
-    }
-
-    // 4. TRƯỜNG HỢP MẶC ĐỊNH (Sách mới)
-    $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
-                   AVG(r.sosao) as sao_avg 
-            FROM product p 
-            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-            GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc
-            ORDER BY p.ma_sp DESC LIMIT 8";
     
     return $this->select($sql);
 }
@@ -123,19 +109,7 @@ public function getActiveDiscount($ma_sp) {
     $res = $this->select($sql, [$ma_sp]);
     return (count($res) > 0) ? (int)$res[0]['discount_percent'] : 0;
 }
-public function getDiscountedProducts($limit = 8) {
-    // JOIN với bảng product_discounts và lọc theo thời gian hiện tại
-    $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
-            FROM product p 
-            JOIN product_discounts d ON p.ma_sp = d.product_id 
-            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-            WHERE d.status = 1 AND NOW() BETWEEN d.start_date AND d.end_date 
-            GROUP BY p.ma_sp 
-            ORDER BY d.discount_percent DESC 
-            LIMIT " . (int)$limit;
-            
-    return $this->select($sql);
-}
+
 // 2. Lấy thông tin khuyến mãi để hiển thị trong Admin
 public function getDiscountForAdmin($ma_sp) {
     $sql = "SELECT * FROM product_discounts WHERE product_id = ? ORDER BY id DESC LIMIT 1";
