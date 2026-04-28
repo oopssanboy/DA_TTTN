@@ -48,7 +48,7 @@
         <span class="old-price" style="text-decoration: line-through; color: #999; font-size: 13px; margin-bottom: 2px;">
             <?php echo number_format($cart['giasp']); ?> ₫
         </span>
-        
+                                    </br>
         <span class="current-price" style=" font-weight: bold; font-size: 17px;">
             <?php echo number_format($cart['gia_ban_thuc_te']); ?> ₫
         </span>
