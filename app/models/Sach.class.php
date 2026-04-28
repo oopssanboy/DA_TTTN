@@ -4,28 +4,39 @@ class Sach extends DB{
         $sql="select * from product order by ma_sp desc";
         return $this->select($sql);
     }
-    public function getAll_limit8($tab){
-        // Luôn nối với bảng reviews để lấy sao_avg
-        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+    public function getAll_limit8($tab) {
+    // 1. Nếu là tab Khuyến mãi, thực hiện JOIN với bảng product_discounts
+    if ($tab === "khuyenmai") {
+        $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
+                FROM product p 
+                JOIN product_discounts d ON p.ma_sp = d.product_id 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                GROUP BY p.ma_sp ";
-
-        if ($tab === "sachhay") {
-            $sql .= " ORDER BY sao_avg DESC LIMIT 8";
-        } elseif ($tab === "sachbanchay") {
-            // Thay bảng order_item bằng tên thật trong CSDL của bạn nếu khác
-            $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
-                    FROM product p 
-                    LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                    LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
-                    GROUP BY p.ma_sp 
-                    ORDER BY tong_ban DESC LIMIT 8";
-        } else {
-            $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
-        }
-        
+                WHERE d.status = 1 AND NOW() BETWEEN d.start_date AND d.end_date 
+                GROUP BY p.ma_sp 
+                ORDER BY d.discount_percent DESC LIMIT 8";
         return $this->select($sql);
     }
+
+    // 2. Các trường hợp khác (giữ nguyên logic cũ của bạn)
+    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+            GROUP BY p.ma_sp ";
+
+    if ($tab === "sachhay") {
+        $sql .= " ORDER BY sao_avg DESC LIMIT 8";
+    } elseif ($tab === "sachbanchay") {
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
+                FROM product p 
+                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
+                GROUP BY p.ma_sp 
+                ORDER BY tong_ban DESC LIMIT 8";
+    } else {
+        $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
+    }
+    
+    return $this->select($sql);
+}
     public function getByid($id)
     {
         $sql="select * from product where ma_sp = $id";
