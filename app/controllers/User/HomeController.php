@@ -18,11 +18,15 @@ class HomeController extends Controller {
         $this->view('user/home/gioithieu', $data);
     }
     public function tintuc() {
-        $data = [
-            'title' => 'Chapter One - The Beginning',
-        ];
-        $this->view('user/home/tintuc', $data);
-    }
+    $couponModel = $this->model('Coupon');
+    $list_coupons = $couponModel->getActiveCoupons();
+
+    $data = [
+        'title' => 'Ưu Đãi & Khuyến Mãi - Chapter One',
+        'list_coupons' => $list_coupons
+    ];
+    $this->view('user/home/tintuc', $data);
+}
     public function lienhe() {
         $data = [
             'title' => 'Chapter One - The Beginning',

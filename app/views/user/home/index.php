@@ -44,12 +44,12 @@
 
     <section class="home-section">
         <div class="section-title-wrap">
-            <h2 class="section-title">Khuyến mãi - Giảm đến 25%</h2>
+            <h2 class="section-title">Khuyến mãi - Giảm sâu</h2>
             <a href="/danh-muc?sap_xep=gia_tang" class="view-all">Xem tất cả <i class="fa-solid fa-angle-right"></i></a>
         </div>
         <div class="product-grid-wrapper">
             <?php 
-            $tab = '';
+            $tab = 'khuyenmai';
             include ROOT_DIR . '/app/views/user/product/product_mid.php'; ?>
         </div>
     </section>

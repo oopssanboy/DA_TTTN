@@ -68,9 +68,16 @@ class AdminBookController extends Controller {
             }
 
             $productModel = $this->model('Sach');
-            $productModel->add_product($tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai);
+            $ma_sp_moi = $productModel->add_product($tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai);
+            if ($ma_sp_moi) {
+            // 2. Bây giờ đã có $ma_sp_moi, tiến hành lưu khuyến mãi
+            $discount_percent = (int)$_POST['discount_percent'];
+            $start = $_POST['discount_start'];
+            $end = $_POST['discount_end'];
 
-            $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Thành công', 'text' => 'Đã thêm sách mới! Bạn có thể thêm biến thể ngay bây giờ.'];
+            $productModel->saveDiscount($ma_sp_moi, $discount_percent, $start, $end);
+           $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Thành công', 'text' => 'Đã thêm sách mới! Bạn có thể thêm biến thể ngay bây giờ.'];
+        }
             header("Location: /admin/sach");
             exit;
         }
@@ -142,7 +149,11 @@ class AdminBookController extends Controller {
 
             $productModel = $this->model('Sach');
             $productModel->update_product($id, $tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai);
+            $discount_percent = (int)$_POST['discount_percent'];
+        $start = $_POST['discount_start'];
+        $end = $_POST['discount_end'];
 
+        $productModel->saveDiscount($id, $discount_percent, $start, $end);
             $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Thành công', 'text' => 'Cập nhật sản phẩm thành công!'];
             header("Location: /admin/sach/sua/" . $id);
             exit;

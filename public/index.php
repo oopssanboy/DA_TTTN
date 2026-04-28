@@ -46,6 +46,11 @@ $router->setBasePath('/');
     $controller = new CartController();
     $controller->checkout();
 });
+    $router->post('/ap-dung-ma', function () {
+    (new CartController())->applyCoupon(); });
+
+    $router->get('/huy-ma', function () {
+    (new CartController())->removeCoupon(); });
 
     $router->get('/thanh-toan-qr', function () {
     $controller = new CheckoutController();
@@ -231,7 +236,18 @@ $router->mount('/admin', function () use ($router) {
         (new AdminReviewController())->index(); });
     $router->get('/danh-gia/xoa/(\d+)', function ($id) {
         (new AdminReviewController())->delete($id); });
+    $router->get('/khuyen-mai', function () {
+        (new AdminCouponController())->index(); 
+    });
+
+    $router->get('/khuyen-mai', function () { (new AdminCouponController())->index(); });
+    $router->get('/khuyen-mai/them', function () { (new AdminCouponController())->create(); });
+    $router->post('/khuyen-mai/them', function () { (new AdminCouponController())->store(); });
+    $router->get('/khuyen-mai/sua/(\d+)', function ($id) { (new AdminCouponController())->edit($id); });
+    $router->post('/khuyen-mai/sua/(\d+)', function ($id) { (new AdminCouponController())->update($id); });
+    $router->get('/khuyen-mai/xoa/(\d+)', function ($id) { (new AdminCouponController())->delete($id); });
 });
+    
 
     $router->set404(function () {
     header('HTTP/1.1 404 Not Found');

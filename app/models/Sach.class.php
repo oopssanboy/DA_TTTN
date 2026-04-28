@@ -6,26 +6,37 @@ class Sach extends DB{
     }
     public function getAll_limit8($tab){
         // Luôn nối với bảng reviews để lấy sao_avg
-        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+        if ($tab === "khuyenmai") {
+        $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
+                FROM product p 
+                JOIN product_discounts d ON p.ma_sp = d.product_id 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                GROUP BY p.ma_sp ";
-
-        if ($tab === "sachhay") {
-            $sql .= " ORDER BY sao_avg DESC LIMIT 8";
-        } elseif ($tab === "sachbanchay") {
-            // Thay bảng order_item bằng tên thật trong CSDL của bạn nếu khác
-            $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
-                    FROM product p 
-                    LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                    LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
-                    GROUP BY p.ma_sp 
-                    ORDER BY tong_ban DESC LIMIT 8";
-        } else {
-            $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
-        }
-        
+                WHERE d.status = 1 AND NOW() BETWEEN d.start_date AND d.end_date 
+                GROUP BY p.ma_sp 
+                ORDER BY d.discount_percent DESC LIMIT 8";
         return $this->select($sql);
     }
+
+    // 2. Các trường hợp khác (giữ nguyên logic cũ của bạn)
+    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
+            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+            GROUP BY p.ma_sp ";
+
+    if ($tab === "sachhay") {
+        $sql .= " ORDER BY sao_avg DESC LIMIT 8";
+    } elseif ($tab === "sachbanchay") {
+        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
+                FROM product p 
+                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
+                GROUP BY p.ma_sp 
+                ORDER BY tong_ban DESC LIMIT 8";
+    } else {
+        $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
+    }
+    
+    return $this->select($sql);
+}
     public function getByid($id)
     {
         $sql="select * from product where ma_sp = $id";
@@ -85,6 +96,47 @@ class Sach extends DB{
         }
     }
 
+    // 1. Lấy % giảm giá đang hoạt động (Dành cho hiển thị khách hàng)
+public function getActiveDiscount($ma_sp) {
+    $sql = "SELECT discount_percent FROM product_discounts 
+            WHERE product_id = ? AND status = 1 
+            AND NOW() BETWEEN start_date AND end_date 
+            ORDER BY id DESC LIMIT 1";
+    $res = $this->select($sql, [$ma_sp]);
+    return (count($res) > 0) ? (int)$res[0]['discount_percent'] : 0;
+}
+public function getDiscountedProducts($limit = 8) {
+    // JOIN với bảng product_discounts và lọc theo thời gian hiện tại
+    $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
+            FROM product p 
+            JOIN product_discounts d ON p.ma_sp = d.product_id 
+            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+            WHERE d.status = 1 AND NOW() BETWEEN d.start_date AND d.end_date 
+            GROUP BY p.ma_sp 
+            ORDER BY d.discount_percent DESC 
+            LIMIT " . (int)$limit;
+            
+    return $this->select($sql);
+}
+// 2. Lấy thông tin khuyến mãi để hiển thị trong Admin
+public function getDiscountForAdmin($ma_sp) {
+    $sql = "SELECT * FROM product_discounts WHERE product_id = ? ORDER BY id DESC LIMIT 1";
+    $res = $this->select($sql, [$ma_sp]);
+    return (count($res) > 0) ? $res[0] : null;
+}
+
+// 3. Lưu khuyến mãi (Dành cho Admin khi thêm/sửa sản phẩm)
+public function saveDiscount($product_id, $percent, $start, $end) {
+    // Xóa khuyến mãi cũ của sản phẩm này trước khi lưu mới
+    $this->delete("DELETE FROM product_discounts WHERE product_id = ?", [$product_id]);
+    
+    if ($percent > 0) {
+        $sql = "INSERT INTO product_discounts (product_id, discount_percent, start_date, end_date) 
+                VALUES (?, ?, ?, ?)";
+        return $this->insert($sql, [$product_id, $percent, $start, $end]);
+    }
+    return true;
+}
     
     // public function loc_san_pham($ma_danhmuc, $phan_loai, $sap_xep, $nxb, $chat_lieu, $phien_ban, $keyword) {
     //     $sql = "SELECT DISTINCT p.* FROM product p  "; 

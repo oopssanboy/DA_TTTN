@@ -1,45 +1,61 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tin Tức & Sự Kiện - Chapter One</title>
-    <link rel="stylesheet" href="/assets/user/css/lienhe.css"> 
-</head>
-<body>
-    <?php require ROOT_DIR . '/app/views/user/layouts/header.php'; ?>
-    
-    <div class="lienhe" style="max-width: 900px; margin: 40px auto; padding: 20px;">
-        <h2 style="border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px;">Tin Tức & Sự Kiện</h2>
+<?php require ROOT_DIR . '/app/views/user/layouts/header.php'; ?>
 
-        <p>Chào mừng bạn đến với chuyên mục Tin tức của <strong>CHAPTER ONE - THE BEGINNING</strong>. Tại đây, chúng tôi liên tục cập nhật những thông tin mới nhất về các tựa sách sắp ra mắt, các chương trình khuyến mãi hấp dẫn và sự kiện dành riêng cho cộng đồng yêu sách.</p>
-        
-        <ul style="list-style: none; padding: 0; margin-top: 30px;">
-            
-            <li style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed #ccc;">
-                <h3 style="color: #d97706; margin-bottom: 5px;">🎉 Sự kiện: Ra mắt tựa sách "Hành Trình Về Phương Đông" bản đặc biệt</h3>
-                <p style="color: #888; font-size: 13px; margin-bottom: 10px;"><i class="fa-regular fa-clock"></i> Ngày đăng: 24/04/2026</p>
-                <p style="line-height: 1.6;">Chapter One hân hạnh mang đến phiên bản giới hạn của cuốn sách kinh điển này với bìa cứng bọc vải và chữ ép nhũ vàng. Khách hàng đặt trước ngay hôm nay sẽ được nhận kèm bookmark thiết kế độc quyền từ nhà xuất bản.</p>
-            </li>
-
-            <li style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed #ccc;">
-                <h3 style="color: #d97706; margin-bottom: 5px;">🔥 Khuyến mãi: "Đọc Sách Xuyên Hè" - Giảm đến 30%</h3>
-                <p style="color: #888; font-size: 13px; margin-bottom: 10px;"><i class="fa-regular fa-clock"></i> Ngày đăng: 15/04/2026</p>
-                <p style="line-height: 1.6;">Chuẩn bị cho một mùa hè rực rỡ với hàng ngàn đầu sách văn học, kỹ năng và thiếu nhi được giảm giá cực sốc. Đặc biệt, nhập mã <strong>SUMMER2026</strong> khi thanh toán giỏ hàng để được giảm thêm 10% trên tổng hóa đơn.</p>
-            </li>
-
-            <li style="margin-bottom: 25px; padding-bottom: 20px;">
-                <h3 style="color: #d97706; margin-bottom: 5px;">📢 Thông báo: Nâng cấp tính năng Đánh giá & Bình luận</h3>
-                <p style="color: #888; font-size: 13px; margin-bottom: 10px;"><i class="fa-regular fa-clock"></i> Ngày đăng: 01/04/2026</p>
-                <p style="line-height: 1.6;">Nhằm nâng cao trải nghiệm mua sắm, website Chapter One vừa ra mắt tính năng cho phép khách hàng đánh giá sao và để lại bình luận dưới mỗi cuốn sách. Hãy chia sẻ cảm nhận và góc nhìn của bạn với cộng đồng nhé!</p>
-            </li>
-
-        </ul>
-
-        <p style="text-align: center; margin-top: 20px; font-style: italic; color: #555;">Đừng quên theo dõi thường xuyên để không bỏ lỡ bất kỳ thông tin thú vị nào nhé!</p>
-        
+<main class="container-main" style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+    <div class="breadcrumb" style="margin-bottom: 20px;">
+        <a href="/">Trang chủ</a> <span>/</span>
+        <span class="current">Mã khuyến mãi & Ưu đãi</span>
     </div>
 
-    <?php require ROOT_DIR . '/app/views/user/layouts/footer.php'; ?>
-</body>
-</html>
+    <div class="card-box" style="padding: 30px; border-top: 5px solid var(--primary-color);">
+        <h2 style="margin-top: 0; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px;">
+            <i class="fa-solid fa-ticket" style="color: var(--primary-color);"></i> Tổng hợp mã giảm giá
+        </h2>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">
+            Sử dụng các mã giảm giá dưới đây tại bước thanh toán giỏ hàng để nhận ưu đãi từ Chapter One.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+            <?php if (!empty($list_coupons)): ?>
+                <?php foreach ($list_coupons as $cp): ?>
+                    <div class="coupon-card" style="display: flex; border: 2px dashed #d97706; border-radius: 10px; overflow: hidden; background: #fffcf5;">
+                        <div style="background: var(--primary-color); color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 100px;">
+                            <span style="font-size: 24px; font-weight: 800;">
+                                <?= ($cp['type'] == 'percent') ? $cp['value'] . '%' : number_format($cp['value']/1000) . 'k' ?>
+                            </span>
+                            <span style="font-size: 12px; text-transform: uppercase;">Giảm</span>
+                        </div>
+                        
+                        <div style="padding: 15px; flex: 1; position: relative;">
+                            <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #333;">Mã: <span style="color: #d0011b; font-family: monospace; font-size: 18px;"><?= $cp['code'] ?></span></h3>
+                            <p style="font-size: 13px; margin: 5px 0; color: #555;">
+                                <i class="fa-solid fa-circle-info"></i> Đơn tối thiểu: <strong><?= number_format($cp['min_order_value']) ?>đ</strong>
+                            </p>
+                            <p style="font-size: 13px; margin: 5px 0; color: #d0011b;">
+                                <i class="fa-solid fa-hourglass-end"></i> Hết hạn: <?= date('d/m/Y', strtotime($cp['end_date'])) ?>
+                            </p>
+                            
+                            <button onclick="copyCode('<?= $cp['code'] ?>')" style="margin-top: 10px; background: #333; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: 0.3s;">
+                                <i class="fa-regular fa-copy"></i> Sao chép mã
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                    <img src="/assets/user/img/empty-coupon.png" alt="No coupon" style="width: 150px; opacity: 0.5;">
+                    <p style="color: #888; margin-top: 20px;">Hiện tại không có mã giảm giá nào khả dụng. Hãy quay lại sau nhé!</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</main>
+
+<script>
+function copyCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+        alert("Đã sao chép mã: " + code);
+    });
+}
+</script>
+
+<?php require ROOT_DIR . '/app/views/user/layouts/footer.php'; ?>

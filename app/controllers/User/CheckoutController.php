@@ -23,7 +23,6 @@ class CheckoutController extends Controller
         $account_no = '1017725187'; 
         $account_name = 'HUYNH NGOC QUAN'; 
         
-       
         $ma_kh = $_SESSION['user_order'][0];
         $temp_order_id = "KH" . $ma_kh . "T" . time(); 
         $description = 'THANH TOAN ' . $temp_order_id; 
@@ -66,8 +65,13 @@ class CheckoutController extends Controller
                 $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
             }
 
-            
             $this->sendOrderEmail($ma_dh, $tongtien, 'Chuyển khoản ngân hàng');
+
+            // GHI NHẬN MÃ GIẢM GIÁ (BANK)
+            if (isset($_SESSION['applied_coupon'])) {
+                $this->model('Coupon')->markUsed($ma_kh, $_SESSION['applied_coupon']['id'], $ma_dh);
+                unset($_SESSION['applied_coupon']);
+            }
 
             $cart->del_byid_kh($ma_kh);
             $_SESSION['user_cart']['count'] = 0;
@@ -169,7 +173,6 @@ class CheckoutController extends Controller
         }
     }
 
-   
     public function momoReturn()
     {
         $resultCode = isset($_GET['resultCode']) ? $_GET['resultCode'] : null;
@@ -190,12 +193,19 @@ class CheckoutController extends Controller
             $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $trangthai, 'momo', $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
 
             foreach ($list_cart as $item) {
-                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['size'], $item['soluong'], $item['giasp'], $item['loai_mau']);
-                $dacdiem_sp->update_tonkho($item['ma_sp'], $item['size'], $item['loai_mau'], $item['soluong'], 'giam');
+                // Sửa lỗi: Cập nhật lại các biến item cho đúng (bạn từng code là size, loai_mau) 
+                // theo đúng cấu trúc ở CartController (chat_lieu, phien_ban)
+                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $item['giasp'], $item['phien_ban']);
+                $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
             }
 
-            
             $this->sendOrderEmail($ma_dh, $tongtien, 'Ví điện tử MoMo');
+
+            // GHI NHẬN MÃ GIẢM GIÁ (MOMO)
+            if (isset($_SESSION['applied_coupon'])) {
+                $this->model('Coupon')->markUsed($ma_kh, $_SESSION['applied_coupon']['id'], $ma_dh);
+                unset($_SESSION['applied_coupon']);
+            }
 
             $cart->del_byid_kh($ma_kh);
             $_SESSION['user_cart']['count'] = 0;

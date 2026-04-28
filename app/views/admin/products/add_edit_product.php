@@ -79,7 +79,26 @@
                         </div>
                     </div>
                 </div>
-                
+                <div style="background: #fff9f0; padding: 20px; border-radius: 8px; border: 1px dashed #d97706; margin-bottom: 25px;">
+    <h4 style="margin-top: 0; color: #d97706; font-size: 15px; text-transform: uppercase; margin-bottom: 15px;">
+        <i class="fa-solid fa-bolt"></i> Thiết lập Flash Sale
+    </h4>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+        <div class="form-group">
+            <label>Giảm giá (%)</label>
+            <input type="number" name="discount_percent" value="<?= $km['discount_percent'] ?? '0' ?>" min="0" max="100">
+        </div>
+        <div class="form-group">
+            <label>Bắt đầu Sale</label>
+            <input type="datetime-local" name="discount_start" value="<?= isset($km) ? date('Y-m-d\TH:i', strtotime($km['start_date'])) : '' ?>">
+        </div>
+        <div class="form-group">
+            <label>Kết thúc Sale</label>
+            <input type="datetime-local" name="discount_end" value="<?= isset($km) ? date('Y-m-d\TH:i', strtotime($km['end_date'])) : '' ?>">
+        </div>
+    </div>
+</div>
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> LƯU THÔNG TIN SẢN PHẨM</button>
             </form>
 

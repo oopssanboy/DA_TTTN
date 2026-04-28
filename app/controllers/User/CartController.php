@@ -1,14 +1,12 @@
 <?php
 class CartController extends Controller {
 
- 
     public function __construct() {
         if (!isset($_SESSION['user_login'])) {
             header('Location: /dang-nhap');
             exit;
         }
     }
-
 
     public function index() {
         $cart_model = $this->model('Cart');
@@ -125,11 +123,38 @@ class CartController extends Controller {
         exit;
     }
 
+    public function applyCoupon() {
+        $code = trim($_POST['ma_code'] ?? '');
+        $ma_kh = $_SESSION['user_info']['ma_kh'];
+        
+        // Tính lại tổng tiền từ DB để chống hack giá từ frontend
+        $cart = $this->model('Cart');
+        $list = $cart->getAllcart_info_byid($ma_kh);
+        $total = 0;
+        foreach($list as $it) $total += $it['giasp'] * $it['soluong'];
+
+        $result = $this->model('Coupon')->checkValidCoupon($code, $ma_kh, $total);
+        if ($result['success']) {
+            $_SESSION['applied_coupon'] = ['code' => $code, 'discount' => $result['discount'], 'id' => $result['coupon']['id']];
+            $_SESSION['flash_alert'] = ['icon' => 'success', 'title' => 'Thành công', 'text' => 'Đã áp dụng mã giảm giá!'];
+        } else {
+            $_SESSION['flash_alert'] = ['icon' => 'error', 'title' => 'Lỗi', 'text' => $result['msg']];
+        }
+        header('Location: /gio-hang');
+        exit;
+    }
+
+    // Hàm bổ sung để khách hàng tự hủy mã
+    public function removeCoupon() {
+        unset($_SESSION['applied_coupon']);
+        header('Location: /gio-hang');
+        exit;
+    }
+
     public function checkout() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $ma_kh = $_POST['ma_kh'];
             $ten_kh = $_POST['ten_kh'];
-            $tongtien = $_POST['tongtien'];
             $email = $_POST['email'];
             $tongsp = $_POST['tongsp'];
             $trangthai = 'choxuly';
@@ -139,15 +164,41 @@ class CartController extends Controller {
             $diachi_giaohang = $_POST['diachi'];
             $sdt = $_POST['sdt'];
 
-            $_SESSION['user_order'] = [$ma_kh, $tongtien, $email, $tongsp, $trangthai, $phuongthuc_thanhtoan, $ngay_dat, $ngay_giaohang, $sdt, $ten_kh, $diachi_giaohang];
-
             $cart = $this->model('Cart');
             $dacdiem_sp = $this->model('Dacdiem_sp');
             $order = $this->model('Order');
             $order_item = $this->model('Order_item');
             
+            // 1. Tính toán lại tổng tiền từ DB (Bảo mật)
             $list_cart = $cart->getAllcart_info_byid($ma_kh);
+            $tongtien_goc = 0;
+            foreach ($list_cart as $it) {
+                $tongtien_goc += $it['giasp'] * $it['soluong'];
+            }
+            
+            $tongtien_cuoicung = $tongtien_goc;
 
+            // 2. Re-Validate mã giảm giá một lần cuối
+            if (isset($_SESSION['applied_coupon'])) {
+                $couponModel = $this->model('Coupon');
+                $check = $couponModel->checkValidCoupon($_SESSION['applied_coupon']['code'], $ma_kh, $tongtien_goc);
+                
+                if (!$check['success']) {
+                    unset($_SESSION['applied_coupon']);
+                    $_SESSION['flash_alert'] = [
+                        'title' => 'Lỗi', 'text' => 'Mã giảm giá không còn hợp lệ: ' . $check['msg'], 'icon' => 'error'
+                    ];
+                    header("Location: /gio-hang");
+                    exit;
+                }
+                $tongtien_cuoicung = $tongtien_goc - $check['discount'];
+                $_SESSION['applied_coupon']['discount'] = $check['discount']; 
+            }
+
+            // 3. Lưu mảng với tổng tiền đã giảm ($tongtien_cuoicung)
+            $_SESSION['user_order'] = [$ma_kh, $tongtien_cuoicung, $email, $tongsp, $trangthai, $phuongthuc_thanhtoan, $ngay_dat, $ngay_giaohang, $sdt, $ten_kh, $diachi_giaohang];
+
+            // Kiểm tra tồn kho
             $flag = 0;
             foreach ($list_cart as $it) {
                 $info_product = $dacdiem_sp->getAll_byid_sp($it['ma_sp']);
@@ -176,6 +227,11 @@ class CartController extends Controller {
                         $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
                     }
 
+                    // GHI NHẬN MÃ GIẢM GIÁ (COD)
+                    if (isset($_SESSION['applied_coupon'])) {
+                        $this->model('Coupon')->markUsed($ma_kh, $_SESSION['applied_coupon']['id'], $ma_dh);
+                        unset($_SESSION['applied_coupon']);
+                    }
                 
                     $email_kh = $_SESSION['user_info']['email'] ?? ($_SESSION['user_info'][0]['email'] ?? '');
                     $ten_kh = $_SESSION['user_info']['ten_kh'] ?? ($_SESSION['user_info'][0]['ten_kh'] ?? 'Quý khách');
@@ -216,13 +272,11 @@ class CartController extends Controller {
                     exit;
                     
                 } else if ($phuongthuc_thanhtoan == 'bank') {
-                   
                     header("Location: /thanh-toan-qr");
                     exit;
                 } else if ($phuongthuc_thanhtoan == 'momo') {
-                
-                header("Location: /thanh-toan-momo");
-                exit;
+                    header("Location: /thanh-toan-momo");
+                    exit;
                 }
             }
         }

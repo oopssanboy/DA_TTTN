@@ -81,8 +81,21 @@
                                 <span class="total-price"><?php echo number_format($sum_money); ?> ₫</span>
                             </div>
                             <p style="font-size: 12px; color: var(--text-muted); text-align: right; margin-top: 5px;">(Đã bao gồm VAT nếu có)</p>
-                        </div>
+                            <form action="/ap-dung-ma" method="POST" style="display: flex; gap: 10px; margin-top: 20px;">
+    <input type="text" name="ma_code" placeholder="Nhập mã giảm giá..." required 
+           style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; flex: 1;">
+    <button type="submit" class="btn-primary">Áp dụng</button>
+</form>
 
+<?php if(isset($_SESSION['applied_coupon'])): ?>
+    <div style="color: #d97706; margin-top: 10px;">
+        Đang áp dụng mã: <strong><?= $_SESSION['applied_coupon']['code'] ?></strong> 
+        (-<?= number_format($_SESSION['applied_coupon']['discount']) ?>đ)
+        <a href="/huy-ma" style="color: red; margin-left: 10px;">[Hủy]</a>
+    </div>
+<?php endif; ?>
+                        </div>
+                        
                         <form action="/gio-hang/thanh-toan" method="POST" class="checkout-form" onsubmit="confirmForm(event, 'Xác nhận tiến hành đặt hàng với thông tin này?', this);">
                             
                             <h3>Thông tin giao hàng</h3>
