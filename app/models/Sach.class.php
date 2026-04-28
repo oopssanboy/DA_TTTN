@@ -5,35 +5,53 @@ class Sach extends DB{
         return $this->select($sql);
     }
     public function getAll_limit8($tab) {
-    // 1. Nếu là tab Khuyến mãi, thực hiện JOIN với bảng product_discounts
+    $now = date('Y-m-d H:i:s'); // Lấy giờ hệ thống chính xác
+
+    // 1. TRƯỜNG HỢP: KHUYẾN MÃI (Flash Sale)
     if ($tab === "khuyenmai") {
-        $sql = "SELECT p.*, d.discount_percent, AVG(r.sosao) as sao_avg 
+        // Lưu ý: Kiểm tra chính xác tên bảng là 'product_discount' hay 'product_discounts'
+        // Ở đây mình dùng 'product_discount' và join qua cột 'ma_sp' theo chuẩn của bạn
+        $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
+                       d.discount_percent, AVG(r.sosao) as sao_avg 
                 FROM product p 
-                JOIN product_discounts d ON p.ma_sp = d.product_id 
+                INNER JOIN product_discounts d ON p.ma_sp = d.product_id 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-                WHERE d.status = 1 AND NOW() BETWEEN d.start_date AND d.end_date 
-                GROUP BY p.ma_sp 
+                WHERE d.status = 1 AND ? BETWEEN d.start_date AND d.end_date 
+                GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, d.discount_percent
                 ORDER BY d.discount_percent DESC LIMIT 8";
-        return $this->select($sql);
+        return $this->select($sql, [$now]);
     }
 
-    // 2. Các trường hợp khác (giữ nguyên logic cũ của bạn)
-    $sql = "SELECT p.*, AVG(r.sosao) as sao_avg FROM product p 
-            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
-            GROUP BY p.ma_sp ";
-
-    if ($tab === "sachhay") {
-        $sql .= " ORDER BY sao_avg DESC LIMIT 8";
-    } elseif ($tab === "sachbanchay") {
-        $sql = "SELECT p.*, AVG(r.sosao) as sao_avg, SUM(oi.soluong) as tong_ban 
+    // 2. TRƯỜNG HỢP: BÁN CHẠY
+    if ($tab === "sachbanchay") {
+        $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
+                       AVG(r.sosao) as sao_avg, SUM(IFNULL(oi.soluong, 0)) as tong_ban 
                 FROM product p 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
                 LEFT JOIN order_item oi ON p.ma_sp = oi.ma_sp 
-                GROUP BY p.ma_sp 
+                GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc
                 ORDER BY tong_ban DESC LIMIT 8";
-    } else {
-        $sql .= " ORDER BY p.ma_sp DESC LIMIT 8";
+        return $this->select($sql);
     }
+
+    // 3. TRƯỜNG HỢP: SÁCH HAY (Đánh giá cao)
+    if ($tab === "sachhay") {
+        $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
+                       AVG(r.sosao) as sao_avg 
+                FROM product p 
+                LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+                GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc
+                ORDER BY sao_avg DESC LIMIT 8";
+        return $this->select($sql);
+    }
+
+    // 4. TRƯỜNG HỢP MẶC ĐỊNH (Sách mới)
+    $sql = "SELECT p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc, 
+                   AVG(r.sosao) as sao_avg 
+            FROM product p 
+            LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
+            GROUP BY p.ma_sp, p.tensp, p.giasp, p.link_hinhanh, p.ma_danhmuc
+            ORDER BY p.ma_sp DESC LIMIT 8";
     
     return $this->select($sql);
 }
