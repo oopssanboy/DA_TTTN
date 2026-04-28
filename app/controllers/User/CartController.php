@@ -9,32 +9,45 @@ class CartController extends Controller {
     }
 
     public function index() {
-        $cart_model = $this->model('Cart');
-        $ma_kh = $_SESSION['user_info']['ma_kh'];
-        
-        $list_cart = $cart_model->getAllcart_info_byid($ma_kh);
-        
-        $sum_money = 0;
-        $sum_product = 0;
-        
-        if ($list_cart != null) {
-            foreach ($list_cart as $cart) {
-                $sum_money += $cart['giasp'] * $cart['soluong'];
-                $sum_product += $cart['soluong'];
-            }
+    $cart_model = $this->model('Cart');
+    $sach_model = $this->model('Sach'); // Load thêm model Sach
+    $ma_kh = $_SESSION['user_info']['ma_kh'];
+    
+    $list_cart = $cart_model->getAllcart_info_byid($ma_kh);
+    
+    $sum_money = 0;
+    $sum_product = 0;
+    
+    if ($list_cart != null) {
+        // Dùng tham chiếu & để thay đổi trực tiếp giá trị trong mảng
+        foreach ($list_cart as &$cart) {
+            // Lấy % giảm giá thực tế từ bảng product_discount
+            $percent = $sach_model->getActiveDiscount($cart['ma_sp']);
+            $gia_niem_yet = $cart['giasp'];
+            
+            // Tính giá bán thực tế
+            $gia_ban = ($percent > 0) ? ($gia_niem_yet * (100 - $percent) / 100) : $gia_niem_yet;
+            
+            // Gán thêm các trường mới vào item để view sử dụng
+            $cart['gia_ban_thuc_te'] = $gia_ban;
+            $cart['phan_tram_giam'] = $percent;
+            
+            $sum_money += $gia_ban * $cart['soluong'];
+            $sum_product += $cart['soluong'];
         }
-
-        $data = [
-            'title' => 'Giỏ hàng của bạn - Chapter One',
-            'list_cart' => $list_cart,
-            'sum_money' => $sum_money,
-            'sum_product' => $sum_product,
-            'date_now' => date('Y-m-d'),
-            'date' => date('Y-m-d', strtotime('+3 days'))
-        ];
-
-        $this->view('user/cart/index', $data);
     }
+
+    $data = [
+        'title' => 'Giỏ hàng của bạn - Chapter One',
+        'list_cart' => $list_cart,
+        'sum_money' => $sum_money, // Tổng tiền mới sau khi giảm
+        'sum_product' => $sum_product,
+        'date_now' => date('Y-m-d'),
+        'date' => date('Y-m-d', strtotime('+3 days'))
+    ];
+
+    $this->view('user/cart/index', $data);
+}
 
     public function add() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ma_sp'])) {
@@ -168,12 +181,15 @@ class CartController extends Controller {
             $dacdiem_sp = $this->model('Dacdiem_sp');
             $order = $this->model('Order');
             $order_item = $this->model('Order_item');
+            $sach_model = $this->model('Sach');
             
             // 1. Tính toán lại tổng tiền từ DB (Bảo mật)
             $list_cart = $cart->getAllcart_info_byid($ma_kh);
             $tongtien_goc = 0;
             foreach ($list_cart as $it) {
-                $tongtien_goc += $it['giasp'] * $it['soluong'];
+                $percent = $sach_model->getActiveDiscount($it['ma_sp']);
+                $gia_thuc_te = ($percent > 0) ? ($it['giasp'] * (100 - $percent) / 100) : $it['giasp'];
+                $tongtien_goc += $gia_thuc_te * $it['soluong'];
             }
             
             $tongtien_cuoicung = $tongtien_goc;
@@ -223,7 +239,9 @@ class CartController extends Controller {
                     $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $_SESSION['user_order'][4], $_SESSION['user_order'][5], $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
                     
                     foreach ($list_cart as $item) {
-                        $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $item['giasp'], $item['phien_ban']);
+                        $percent = $sach_model->getActiveDiscount($item['ma_sp']);
+                        $gia_thuc_te = ($percent > 0) ? ($item['giasp'] * (100 - $percent) / 100) : $item['giasp'];
+                        $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $gia_thuc_te, $item['phien_ban']);
                         $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
                     }
 

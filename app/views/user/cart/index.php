@@ -44,7 +44,19 @@
                                 </div>
                                 
                                 <div class="item-price">
-                                    <span class="price-text"><?php echo number_format($cart['giasp']); ?> ₫</span>
+                                    <?php if ($cart['phan_tram_giam'] > 0): ?>
+        <span class="old-price" style="text-decoration: line-through; color: #999; font-size: 13px; margin-bottom: 2px;">
+            <?php echo number_format($cart['giasp']); ?> ₫
+        </span>
+        
+        <span class="current-price" style=" font-weight: bold; font-size: 17px;">
+            <?php echo number_format($cart['gia_ban_thuc_te']); ?> ₫
+        </span>
+    <?php else: ?>
+        <span class="current-price" style="font-weight: bold; font-size: 17px; margin-top: 15px;">
+            <?php echo number_format($cart['giasp']); ?> ₫
+        </span>
+    <?php endif; ?>
                                 </div>
                                 
                                 <div class="item-quantity">

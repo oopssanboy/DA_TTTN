@@ -53,6 +53,7 @@ class CheckoutController extends Controller
             $order_item = $this->model('Order_item');
             $cart = $this->model('Cart');
             $dacdiem_sp = $this->model('Dacdiem_sp');
+            $sach_model = $this->model('Sach');
 
             $list_cart = $cart->getAllcart_info_byid($ma_kh);
           
@@ -61,7 +62,9 @@ class CheckoutController extends Controller
             $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $trangthai, $_SESSION['user_order'][5], $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
 
             foreach ($list_cart as $item) {
-                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $item['giasp'], $item['phien_ban']);
+                $percent = $sach_model->getActiveDiscount($item['ma_sp']);
+                $gia_thuc_te = ($percent > 0) ? ($item['giasp'] * (100 - $percent) / 100) : $item['giasp'];
+                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $gia_thuc_te, $item['phien_ban']);
                 $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
             }
 
@@ -186,6 +189,7 @@ class CheckoutController extends Controller
             $order_item = $this->model('Order_item');
             $cart = $this->model('Cart');
             $dacdiem_sp = $this->model('Dacdiem_sp');
+            $sach_model = $this->model('Sach');
 
             $list_cart = $cart->getAllcart_info_byid($ma_kh);
 
@@ -193,9 +197,9 @@ class CheckoutController extends Controller
             $ma_dh = $order->add_order($_SESSION['user_order'][0], $_SESSION['user_order'][1], $_SESSION['user_order'][2], $_SESSION['user_order'][3], $trangthai, 'momo', $_SESSION['user_order'][6], $_SESSION['user_order'][7], $_SESSION['user_order'][8], $_SESSION['user_order'][9], $_SESSION['user_order'][10]);
 
             foreach ($list_cart as $item) {
-                // Sửa lỗi: Cập nhật lại các biến item cho đúng (bạn từng code là size, loai_mau) 
-                // theo đúng cấu trúc ở CartController (chat_lieu, phien_ban)
-                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $item['giasp'], $item['phien_ban']);
+                 $percent = $sach_model->getActiveDiscount($item['ma_sp']);
+                $gia_thuc_te = ($percent > 0) ? ($item['giasp'] * (100 - $percent) / 100) : $item['giasp'];
+                $order_item->add_order_item($item['ma_sp'], $ma_dh, $item['chat_lieu'], $item['soluong'], $gia_thuc_te, $item['phien_ban']);
                 $dacdiem_sp->update_tonkho($item['ma_sp'], $item['chat_lieu'], $item['phien_ban'], $item['soluong'], 'giam');
             }
 

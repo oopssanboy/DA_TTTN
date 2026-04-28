@@ -1,106 +1,125 @@
 <?php
-class Sach extends DB{
-    public function getAll(){
-        $sql="select * from product order by ma_sp desc";
+class Sach extends DB
+{
+    public function getAll()
+    {
+        $sql = "SELECT p.*, 
+            (SELECT d.discount_percent FROM product_discounts d 
+             WHERE d.product_id = p.ma_sp AND d.status = 1 
+             AND NOW() BETWEEN d.start_date AND d.end_date LIMIT 1) as phan_tram_giam,
+            CASE 
+                WHEN (SELECT discount_percent FROM product_discounts d 
+                      WHERE d.product_id = p.ma_sp AND d.status = 1 
+                      AND NOW() BETWEEN d.start_date AND d.end_date LIMIT 1) IS NOT NULL 
+                THEN p.giasp * (100 - (SELECT discount_percent FROM product_discounts d 
+                                      WHERE d.product_id = p.ma_sp AND d.status = 1 
+                                      AND NOW() BETWEEN d.start_date AND d.end_date LIMIT 1)) / 100
+                ELSE p.giasp 
+            END as gia_da_giam
+            FROM product p 
+            ORDER BY p.ma_sp DESC";
         return $this->select($sql);
     }
-    public function getAll_limit8($tab) {
-    // Lấy thời gian hiện tại
-    $now = date('Y-m-d H:i:s');
+    public function getAll_limit8($tab)
+    {
+        // Sử dụng NOW() trực tiếp trong SQL để khớp với múi giờ của Database trên Host
 
-    // 1. Trường hợp tab KHUYẾN MÃI
-    if ($tab === "khuyenmai") {
-        $sql = "SELECT p.*, 
+        // 1. Tab KHUYẾN MÃI (Dựa trên image_3ea1fd.png: product_discount, ma_sp)
+        if ($tab === "khuyenmai") {
+            $sql = "SELECT p.*, 
                 (SELECT d.discount_percent FROM product_discounts d 
                  WHERE d.product_id = p.ma_sp AND d.status = 1 
-                 AND '$now' BETWEEN d.start_date AND d.end_date 
-                 LIMIT 1) as discount_percent,
+                 AND NOW() BETWEEN d.start_date AND d.end_date LIMIT 1) as discount_percent,
                 (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
                 FROM product p
-                WHERE (SELECT COUNT(*) FROM product_discounts d 
-                       WHERE d.product_id = p.ma_sp AND d.status = 1 
-                       AND '$now' BETWEEN d.start_date AND d.end_date) > 0
+                WHERE p.ma_sp IN (SELECT product_id FROM product_discounts WHERE status = 1 AND NOW() BETWEEN start_date AND end_date)
                 ORDER BY discount_percent DESC LIMIT 8";
-        return $this->select($sql);
-    }
+            return $this->select($sql);
+        }
 
-    // 2. Trường hợp tab BÁN CHẠY
-    if ($tab === "sachbanchay") {
-        $sql = "SELECT p.*, 
-                (SELECT SUM(oi.soluong) FROM order_item oi WHERE oi.ma_sp = p.ma_sp) as tong_ban,
+        // 2. Tab BÁN CHẠY (Dựa trên image_3ea1df.png: order_item, ma_sp)
+        if ($tab === "sachbanchay") {
+            $sql = "SELECT p.*, 
+                (SELECT SUM(soluong) FROM order_item WHERE ma_sp = p.ma_sp) as tong_ban,
                 (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
                 FROM product p
                 ORDER BY tong_ban DESC LIMIT 8";
-        return $this->select($sql);
-    }
+            return $this->select($sql);
+        }
 
-    // 3. Trường hợp tab SÁCH HAY (Đánh giá cao)
-    if ($tab === "sachhay") {
-        $sql = "SELECT p.*, 
+        // 3. Tab SÁCH HAY
+        if ($tab === "sachhay") {
+            $sql = "SELECT p.*, 
                 (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
                 FROM product p
                 ORDER BY sao_avg DESC LIMIT 8";
-        return $this->select($sql);
-    }
+            return $this->select($sql);
+        }
 
-    // 4. MẶC ĐỊNH (Sách mới nhất)
-    $sql = "SELECT p.*, 
+        // 4. MẶC ĐỊNH (Sách mới)
+        $sql = "SELECT p.*, 
             (SELECT AVG(r.sosao) FROM reviews r WHERE r.ma_sp = p.ma_sp) as sao_avg
             FROM product p
             ORDER BY p.ma_sp DESC LIMIT 8";
-            
-    return $this->select($sql);
-}
-    public function getByid($id)
-    {
-        $sql="select * from product where ma_sp = $id";
+
         return $this->select($sql);
     }
-    public function getAll_bycartegory($ma_danhmuc){
-        $sql="select * from product where ma_danhmuc=$ma_danhmuc";
+    public function getByid($id)
+    {
+        $sql = "select * from product where ma_sp = $id";
+        return $this->select($sql);
+    }
+    public function getAll_bycartegory($ma_danhmuc)
+    {
+        $sql = "select * from product where ma_danhmuc=$ma_danhmuc";
         return $this->select($sql);
     }
     // Lấy tối đa 8 sản phẩm cùng danh mục (Loại trừ cuốn sách đang xem)
-    public function getRelatedProducts($ma_danhmuc, $ma_sp_hien_tai, $limit) {
+    public function getRelatedProducts($ma_danhmuc, $ma_sp_hien_tai, $limit)
+    {
         $sql = "SELECT p.*, AVG(r.sosao) as sao_avg 
                 FROM product p 
                 LEFT JOIN reviews r ON p.ma_sp = r.ma_sp 
                 WHERE p.ma_danhmuc = ? AND p.ma_sp != ? 
                 GROUP BY p.ma_sp 
                 ORDER BY p.ma_sp DESC 
-                LIMIT " . (int)$limit;
-                
+                LIMIT " . (int) $limit;
+
         return $this->select($sql, [$ma_danhmuc, $ma_sp_hien_tai]);
     }
-    public function getAll_by_phanloai($phan_loai){
-        $sql="select * from product where phan_loai = '" . $phan_loai . "'";
+    public function getAll_by_phanloai($phan_loai)
+    {
+        $sql = "select * from product where phan_loai = '" . $phan_loai . "'";
         return $this->select($sql);
     }
     public function getAll_dacdiem_byid($id)
     {
-        $sql="select * from product join dacdiem_sp on product.ma_sp = dacdiem_sp.ma_sp where product.ma_sp = $id group by dacdiem_sp.chat_lieu order by chat_lieu asc";
+        $sql = "select * from product join dacdiem_sp on product.ma_sp = dacdiem_sp.ma_sp where product.ma_sp = $id group by dacdiem_sp.chat_lieu order by chat_lieu asc";
         return $this->select($sql);
     }
-    
+
     public function getAll_phanloai()
     {
-        $sql="select * from product group by phan_loai";
+        $sql = "select * from product group by phan_loai";
         return $this->select($sql);
     }
 
-    
 
 
-    public function add_product($tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai) {
+
+    public function add_product($tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai)
+    {
         $sql = "insert into product (tensp, motasp, giasp, ma_nxb, link_hinhanh, ma_danhmuc, phan_loai) 
                 values (?, ?, ?, ?, ?, ?, ?)";
         return $this->insert($sql, [$tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai]);
     }
-    public function delete_product($id) {
+    public function delete_product($id)
+    {
         $sql = "delete from product where ma_sp = ?";
         return $this->delete($sql, [$id]);
     }
-    public function update_product($id, $tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai) {
+    public function update_product($id, $tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai)
+    {
         if ($link_hinhanh != '') {
             $sql = "update product set tensp=?, motasp=?, giasp=?, ma_nxb=?, link_hinhanh=?, ma_danhmuc=?, phan_loai=? where ma_sp=?";
             return $this->update($sql, [$tensp, $motasp, $giasp, $ma_nxb, $link_hinhanh, $ma_danhmuc, $phan_loai, $id]);
@@ -111,55 +130,58 @@ class Sach extends DB{
     }
 
     // 1. Lấy % giảm giá đang hoạt động (Dành cho hiển thị khách hàng)
-public function getActiveDiscount($ma_sp) {
-    $sql = "SELECT discount_percent FROM product_discounts 
+    public function getActiveDiscount($ma_sp)
+    {
+        $sql = "SELECT discount_percent FROM product_discounts 
             WHERE product_id = ? AND status = 1 
             AND NOW() BETWEEN start_date AND end_date 
             ORDER BY id DESC LIMIT 1";
-    $res = $this->select($sql, [$ma_sp]);
-    return (count($res) > 0) ? (int)$res[0]['discount_percent'] : 0;
-}
-
-// 2. Lấy thông tin khuyến mãi để hiển thị trong Admin
-public function getDiscountForAdmin($ma_sp) {
-    $sql = "SELECT * FROM product_discounts WHERE product_id = ? ORDER BY id DESC LIMIT 1";
-    $res = $this->select($sql, [$ma_sp]);
-    return (count($res) > 0) ? $res[0] : null;
-}
-
-// 3. Lưu khuyến mãi (Dành cho Admin khi thêm/sửa sản phẩm)
-public function saveDiscount($product_id, $percent, $start, $end) {
-    // Xóa khuyến mãi cũ của sản phẩm này trước khi lưu mới
-    $this->delete("DELETE FROM product_discounts WHERE product_id = ?", [$product_id]);
-    
-    if ($percent > 0) {
-        $sql = "INSERT INTO product_discounts (product_id, discount_percent, start_date, end_date) 
-                VALUES (?, ?, ?, ?)";
-        return $this->insert($sql, [$product_id, $percent, $start, $end]);
+        $res = $this->select($sql, [$ma_sp]);
+        return (count($res) > 0) ? (int) $res[0]['discount_percent'] : 0;
     }
-    return true;
-}
-    
+
+    // 2. Lấy thông tin khuyến mãi để hiển thị trong Admin
+    public function getDiscountForAdmin($ma_sp)
+    {
+        $sql = "SELECT * FROM product_discounts WHERE product_id = ? ORDER BY id DESC LIMIT 1";
+        $res = $this->select($sql, [$ma_sp]);
+        return (count($res) > 0) ? $res[0] : null;
+    }
+
+    // 3. Lưu khuyến mãi (Dành cho Admin khi thêm/sửa sản phẩm)
+    public function saveDiscount($product_id, $percent, $start, $end)
+    {
+        // Xóa khuyến mãi cũ của sản phẩm này trước khi lưu mới
+        $this->delete("DELETE FROM product_discounts WHERE product_id = ?", [$product_id]);
+
+        if ($percent > 0) {
+            $sql = "INSERT INTO product_discounts (product_id, discount_percent, start_date, end_date) 
+                VALUES (?, ?, ?, ?)";
+            return $this->insert($sql, [$product_id, $percent, $start, $end]);
+        }
+        return true;
+    }
+
     // public function loc_san_pham($ma_danhmuc, $phan_loai, $sap_xep, $nxb, $chat_lieu, $phien_ban, $keyword) {
     //     $sql = "SELECT DISTINCT p.* FROM product p  "; 
-        
+
     //     if (!empty($chat_lieu) || !empty($phien_ban)) {
     //         $sql .= " JOIN dacdiem_sp d ON p.ma_sp = d.ma_sp ";
     //     }
-        
+
     //     $sql .= " WHERE 1=1";
     //     $params = []; 
-        
+
     //     if (!empty($ma_danhmuc)) {
     //         $sql .= " AND p.ma_danhmuc = ?"; 
     //         $params[] = $ma_danhmuc;
     //     }
-        
+
     //     if (!empty($phan_loai)) {
     //         $sql .= " AND p.phan_loai = ?"; 
     //         $params[] = $phan_loai;
     //     }
-        
+
     //     if (!empty($nxb)) {
     //         if (!is_array($nxb)) {
     //             $nxb = [$nxb]; 
@@ -182,8 +204,8 @@ public function saveDiscount($product_id, $percent, $start, $end) {
     //             $sql .= " AND p.tensp LIKE ?"; 
     //             $params[] = "%" . $keyword . "%";
     //         }
-            
-             
+
+
     //     if ($sap_xep == 'gia_tang') {
     //         $sql .= " ORDER BY p.giasp ASC";
     //     } elseif ($sap_xep == 'gia_giam') {
@@ -191,15 +213,16 @@ public function saveDiscount($product_id, $percent, $start, $end) {
     //     } else {
     //         $sql .= " ORDER BY p.ma_sp DESC"; 
     //     }
-        
+
     //     return $this->select($sql, $params);
     // }
-    
+
     // 1. Đếm tổng số sản phẩm dựa trên các bộ lọc hiện tại
     // 1. Hàm đếm tổng số lượng
-    public function count_loc_san_pham($ma_danhmuc, $phan_loai, $nxb, $chat_lieu, $phien_ban, $keyword, $sap_xep = '', $gia_min = 0, $gia_max = 0) {
+    public function count_loc_san_pham($ma_danhmuc, $phan_loai, $nxb, $chat_lieu, $phien_ban, $keyword, $sap_xep = '', $gia_min = 0, $gia_max = 0)
+    {
         $sql = "SELECT COUNT(DISTINCT p.ma_sp) as total FROM product p ";
-        
+
         if (!empty($chat_lieu) || !empty($phien_ban)) {
             $sql .= " JOIN dacdiem_sp d ON p.ma_sp = d.ma_sp ";
         }
@@ -212,37 +235,64 @@ public function saveDiscount($product_id, $percent, $start, $end) {
 
         $sql .= " WHERE 1=1";
         $params = [];
-        
-        if (!empty($ma_danhmuc)) { $sql .= " AND p.ma_danhmuc = ?"; $params[] = $ma_danhmuc; }
-        if (!empty($phan_loai)) { $sql .= " AND p.phan_loai = ?"; $params[] = $phan_loai; }
+
+        if (!empty($ma_danhmuc)) {
+            $sql .= " AND p.ma_danhmuc = ?";
+            $params[] = $ma_danhmuc;
+        }
+        if (!empty($phan_loai)) {
+            $sql .= " AND p.phan_loai = ?";
+            $params[] = $phan_loai;
+        }
         if (!empty($nxb)) {
-            if (!is_array($nxb)) { $nxb = [$nxb]; }
+            if (!is_array($nxb)) {
+                $nxb = [$nxb];
+            }
             $placeholders = implode(',', array_fill(0, count($nxb), '?'));
             $sql .= " AND p.ma_nxb IN ($placeholders)";
-            foreach ($nxb as $id_hang) { $params[] = $id_hang; }
+            foreach ($nxb as $id_hang) {
+                $params[] = $id_hang;
+            }
         }
-        if (!empty($chat_lieu)) { $sql .= " AND d.chat_lieu LIKE ?"; $params[] = "%" . $chat_lieu . "%"; }
-        if (!empty($phien_ban)) { $sql .= " AND d.phien_ban LIKE ?"; $params[] = "%" . $phien_ban . "%"; }
-        if (!empty($keyword)) { $sql .= " AND p.tensp LIKE ?"; $params[] = "%" . $keyword . "%"; }
-        
+        if (!empty($chat_lieu)) {
+            $sql .= " AND d.chat_lieu LIKE ?";
+            $params[] = "%" . $chat_lieu . "%";
+        }
+        if (!empty($phien_ban)) {
+            $sql .= " AND d.phien_ban LIKE ?";
+            $params[] = "%" . $phien_ban . "%";
+        }
+        if (!empty($keyword)) {
+            $sql .= " AND p.tensp LIKE ?";
+            $params[] = "%" . $keyword . "%";
+        }
+
         // LỌC THEO KHOẢNG GIÁ
-        if ($gia_min > 0) { $sql .= " AND p.giasp >= ?"; $params[] = $gia_min; }
-        if ($gia_max > 0) { $sql .= " AND p.giasp <= ?"; $params[] = $gia_max; }
+        if ($gia_min > 0) {
+            $sql .= " AND p.giasp >= ?";
+            $params[] = $gia_min;
+        }
+        if ($gia_max > 0) {
+            $sql .= " AND p.giasp <= ?";
+            $params[] = $gia_max;
+        }
 
         $result = $this->select($sql, $params);
         return $result[0]['total'] ?? 0;
     }
 
     // 2. Hàm lấy danh sách sản phẩm
-    public function loc_san_pham($ma_danhmuc, $phan_loai, $sap_xep, $nxb, $chat_lieu, $phien_ban, $keyword, $limit = 12, $offset = 0, $gia_min = 0, $gia_max = 0) {
+    public function loc_san_pham($ma_danhmuc, $phan_loai, $sap_xep, $nxb, $chat_lieu, $phien_ban, $keyword, $limit = 12, $offset = 0, $gia_min = 0, $gia_max = 0)
+    {
         $select_clause = "DISTINCT p.*, AVG(r.sosao) as sao_avg";
-        if ($sap_xep == 'ban_chay') $select_clause .= ", SUM(oi.soluong) as tong_ban";
+        if ($sap_xep == 'ban_chay')
+            $select_clause .= ", SUM(oi.soluong) as tong_ban";
 
         $sql = "SELECT $select_clause FROM product p ";
-        
+
         // LUÔN LUÔN JOIN BẢNG REVIEWS
         $sql .= " LEFT JOIN reviews r ON p.ma_sp = r.ma_sp ";
-        
+
         if (!empty($chat_lieu) || !empty($phien_ban)) {
             $sql .= " JOIN dacdiem_sp d ON p.ma_sp = d.ma_sp ";
         }
@@ -252,34 +302,65 @@ public function saveDiscount($product_id, $percent, $start, $end) {
 
         $sql .= " WHERE 1=1";
         $params = [];
-        
-        if (!empty($ma_danhmuc)) { $sql .= " AND p.ma_danhmuc = ?"; $params[] = $ma_danhmuc; }
-        if (!empty($phan_loai)) { $sql .= " AND p.phan_loai = ?"; $params[] = $phan_loai; }
+
+        if (!empty($ma_danhmuc)) {
+            $sql .= " AND p.ma_danhmuc = ?";
+            $params[] = $ma_danhmuc;
+        }
+        if (!empty($phan_loai)) {
+            $sql .= " AND p.phan_loai = ?";
+            $params[] = $phan_loai;
+        }
         if (!empty($nxb)) {
-            if (!is_array($nxb)) { $nxb = [$nxb]; }
+            if (!is_array($nxb)) {
+                $nxb = [$nxb];
+            }
             $placeholders = implode(',', array_fill(0, count($nxb), '?'));
             $sql .= " AND p.ma_nxb IN ($placeholders)";
-            foreach ($nxb as $id_hang) { $params[] = $id_hang; }
+            foreach ($nxb as $id_hang) {
+                $params[] = $id_hang;
+            }
         }
-        if (!empty($chat_lieu)) { $sql .= " AND d.chat_lieu LIKE ?"; $params[] = "%" . $chat_lieu . "%"; }
-        if (!empty($phien_ban)) { $sql .= " AND d.phien_ban LIKE ?"; $params[] = "%" . $phien_ban . "%"; }
-        if (!empty($keyword)) { $sql .= " AND p.tensp LIKE ?"; $params[] = "%" . $keyword . "%"; }
-        
+        if (!empty($chat_lieu)) {
+            $sql .= " AND d.chat_lieu LIKE ?";
+            $params[] = "%" . $chat_lieu . "%";
+        }
+        if (!empty($phien_ban)) {
+            $sql .= " AND d.phien_ban LIKE ?";
+            $params[] = "%" . $phien_ban . "%";
+        }
+        if (!empty($keyword)) {
+            $sql .= " AND p.tensp LIKE ?";
+            $params[] = "%" . $keyword . "%";
+        }
+
         // LỌC THEO KHOẢNG GIÁ
-        if ($gia_min > 0) { $sql .= " AND p.giasp >= ?"; $params[] = $gia_min; }
-        if ($gia_max > 0) { $sql .= " AND p.giasp <= ?"; $params[] = $gia_max; }
+        if ($gia_min > 0) {
+            $sql .= " AND p.giasp >= ?";
+            $params[] = $gia_min;
+        }
+        if ($gia_max > 0) {
+            $sql .= " AND p.giasp <= ?";
+            $params[] = $gia_max;
+        }
 
         $sql .= " GROUP BY p.ma_sp ";
 
         // Sắp xếp
-        if ($sap_xep == 'danh_gia_cao') { $sql .= " ORDER BY sao_avg DESC"; } 
-        elseif ($sap_xep == 'ban_chay') { $sql .= " ORDER BY tong_ban DESC"; } 
-        elseif ($sap_xep == 'gia_tang') { $sql .= " ORDER BY p.giasp ASC"; } 
-        elseif ($sap_xep == 'gia_giam') { $sql .= " ORDER BY p.giasp DESC"; } 
-        else { $sql .= " ORDER BY p.ma_sp DESC"; }
+        if ($sap_xep == 'danh_gia_cao') {
+            $sql .= " ORDER BY sao_avg DESC";
+        } elseif ($sap_xep == 'ban_chay') {
+            $sql .= " ORDER BY tong_ban DESC";
+        } elseif ($sap_xep == 'gia_tang') {
+            $sql .= " ORDER BY p.giasp ASC";
+        } elseif ($sap_xep == 'gia_giam') {
+            $sql .= " ORDER BY p.giasp DESC";
+        } else {
+            $sql .= " ORDER BY p.ma_sp DESC";
+        }
 
-        $sql .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
-        
+        $sql .= " LIMIT " . (int) $limit . " OFFSET " . (int) $offset;
+
         return $this->select($sql, $params);
     }
 }

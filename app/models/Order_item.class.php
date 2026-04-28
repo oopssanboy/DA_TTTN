@@ -21,7 +21,7 @@ class Order_item extends DB{
     }
     public function getAll_orderitem_info_byid($id)
     {
-        $sql="select * from order_item join product on order_item.ma_sp = product.ma_sp where order_item.ma_dh = $id";
+        $sql="select *,order_item.giasp from order_item join product on order_item.ma_sp = product.ma_sp where order_item.ma_dh = $id";
         return $this->select($sql);
     }
 }

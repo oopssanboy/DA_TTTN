@@ -13,9 +13,10 @@
         <div class="card-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 class="page-title" style="margin: 0; border: none; padding: 0;">Quản Lý Sản Phẩm</h2>
-                <a href="/admin/sach/them" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</a>
+                <a href="/admin/sach/them" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Thêm sản phẩm
+                    mới</a>
             </div>
-            
+
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -29,22 +30,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (isset($list_product) && count($list_product) > 0): ?>
+                        <?php
+                        if (isset($list_product) && count($list_product) > 0): ?>
                             <?php foreach ($list_product as $pro): ?>
                                 <tr>
                                     <td><strong>#<?= $pro['ma_sp'] ?></strong></td>
-                                    <td><img src="/uploads/books/<?= htmlspecialchars($pro['link_hinhanh']) ?>" style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;"></td>
-                                    <td style="text-align: left; max-width: 250px;"><strong><?= htmlspecialchars($pro['tensp']) ?></strong></td>
-                                    <td style="color: var(--primary-color); font-weight: bold;"><?= number_format($pro['giasp']) ?> đ</td>
+                                    <td><img src="/uploads/books/<?= htmlspecialchars($pro['link_hinhanh']) ?>"
+                                            style="width: 50px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;">
+                                    </td>
+                                    <td style="text-align: left; max-width: 250px;">
+                                        <strong><?= htmlspecialchars($pro['tensp']) ?></strong></td>
+                                    <td style="color: var(--primary-color); font-weight: bold;">
+
+
+                                        <?php if (isset($pro['phan_tram_giam']) && $pro['phan_tram_giam'] > 0): ?>
+                                            <span style="text-decoration: line-through; color: #888;">
+                                                <?= number_format($pro['giasp']) ?> đ
+                                            </span>
+                                            </br>
+                                            <span style=" ">
+                                                <?= number_format($pro['gia_da_giam']) ?> đ
+                                            </span>
+                                        <?php else: ?>
+                                            <span style="color: var(--primary-color); font-weight: bold;">
+                                                <?= number_format($pro['giasp']) ?> đ
+                                            </span>
+                                        <?php endif; ?>
+
+                                    </td>
                                     <td><?= $pro['ma_nxb'] ?></td>
-                                    <td> 
-                                        <a href="/admin/sach/sua/<?= $pro['ma_sp'] ?>" class="btn btn-sua"><i class="fa-solid fa-pen"></i> Sửa / Biến thể</a> 
-                                        <a href="/admin/sach/xoa/<?= $pro['ma_sp'] ?>" class="btn btn-xoa" onclick="confirmLink(event, 'Bạn có chắc chắn muốn xóa sản phẩm này?', this.href);"><i class="fa-solid fa-trash"></i> Xóa</a>
+                                    <td>
+                                        <a href="/admin/sach/sua/<?= $pro['ma_sp'] ?>" class="btn btn-sua"><i
+                                                class="fa-solid fa-pen"></i> Sửa / Biến thể</a>
+                                        <a href="/admin/sach/xoa/<?= $pro['ma_sp'] ?>" class="btn btn-xoa"
+                                            onclick="confirmLink(event, 'Bạn có chắc chắn muốn xóa sản phẩm này?', this.href);"><i
+                                                class="fa-solid fa-trash"></i> Xóa</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="6">Chưa có sản phẩm nào!</td></tr>
+                            <tr>
+                                <td colspan="6">Chưa có sản phẩm nào!</td>
+                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
